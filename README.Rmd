@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 [![Travis-CI Build Status](https://travis-ci.org/Reckziegel/YahooTickers.svg?branch=master)](https://travis-ci.org/Reckziegel/YahooTickers)
 
-The goal of YahooTickers is to help users to easily get stock index constituents from [Yahoo Finance](https://finance.yahoo.com/) without having to run complicated `for` loops. This may be specially useful for users that need to repeatably test investment strategies in different markets, but also be convenient if data is needed for it's side effects (plotting).  
+The goal of YahooTickers is to help users to easily get stock index constituents from [Yahoo Finance](https://finance.yahoo.com/) without having to run complicated `for` loops. This may be specially useful for users that need to repeatably test investment strategies in different markets, but also convenient if data is needed for it's side effects (plotting).  
 
 
 ## Instalation
@@ -46,7 +46,7 @@ get_tickers("dow") %>%
 
 ```
 
-Since the data is "tidy" it's ready to be used in conjunction with `ggplot2` and the `dplyr` verbs for further manipulation (if needed).
+Since the data is "tidy" it's ready to be used in conjunction with `ggplot2` and the `dplyr` verbs for further manipulation.
 
 ```{r example2}
 library(YahooTickers)
@@ -95,4 +95,4 @@ Currently, `YahooTickers` supports the following stock indexes:
 
 ## A Warning
 
-The [Yahoo Finance](https://finance.yahoo.com/) API works reasonably well, but there are cases in which does not cover or provide historical data for all stocks in an index universe. The `bel20` it's a good example: despite officially having 20 components, Yahoo Finance only maintain data for only 4. The message is clear: **always check the data after downloading!**
+The [Yahoo Finance](https://finance.yahoo.com/) API works reasonably well, but there are cases in which does not cover or provide historical data for all stocks in an index universe. The `bel20` it's a good example: despite officially having 20 components, Yahoo Finance only maintain data for 4 stocks. The message is clear: **always check the data after downloading!**
