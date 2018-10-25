@@ -6,7 +6,7 @@ Author: Bernardo Reckziegel
 Maintainer: Bernardo Reckziegel <bernardo_cse@hotmail.com>
 Description: Download stock constituents from several stock indexes. YahooTickers
     is a wrapper around getSymbols from the quantmod package and covers 23 different
-    stock indexes.
+    stock indices.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
