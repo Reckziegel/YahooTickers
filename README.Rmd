@@ -1,7 +1,5 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -97,4 +95,4 @@ Currently, `YahooTickers` supports the following stock indexes:
 
 ## A Warning
 
-The [Yahoo Finance](https://finance.yahoo.com/) API works reasonably well, but there are cases in which does not cover or provide historical data for all stocks in an index universe. The `bel20` it's a good example: despite officially having 20 components, Yahoo Finance only maintain data for only 4. The message is clear: *always check the data after downloading!*
+The [Yahoo Finance](https://finance.yahoo.com/) API works reasonably well, but there are cases in which does not cover or provide historical data for all stocks in an index universe. The `bel20` it's a good example: despite officially having 20 components, Yahoo Finance only maintain data for only 4. The message is clear: **always check the data after downloading!**
