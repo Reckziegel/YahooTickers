@@ -4,23 +4,27 @@
 \alias{get_returns}
 \title{Calculate Returns From Stock Prices}
 \usage{
-get_returns(.tbl, ...)
+get_returns(.tbl, .group, .type, ...)
 }
 \arguments{
-\item{.tbl}{A \code{tibble} with stock prices.}
+\item{.tbl}{A tidy \code{tibble}.}
 
-\item{...}{The columns in which the calculation shoud be conducted.}
+\item{.group}{The column in which the data should be grouped. This will often be a column containing stock tickers or stocks names.}
+
+\item{.type}{The method used to calculate returns. One of: \code{log} or \code{arithmetic}.}
+
+\item{...}{The column (columns) in which the calculation shoud be conducted.}
 }
 \value{
 A tidy \code{tibble}.
 }
 \description{
-Stock prices are known for not been stationary. For econometric modeling use \code{get_returns()}.
+Stock prices are known for been non-stationary. For econometric modeling use \code{get_returns()}.
 }
 \examples{
 library(YahooTickers)
 library(dplyr)
 get_tickers("dow") \%>\%
   get_stocks(.) \%>\%
-  get_returns(., adjusted)
+  get_returns(., tickers, arithmetic, adjusted)
 }

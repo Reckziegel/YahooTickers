@@ -25,4 +25,6 @@ Imports: curl,
     tidyr,
     timetk,
     xml2,
-    magrittr
+    magrittr,
+    rsample,
+    yardstick

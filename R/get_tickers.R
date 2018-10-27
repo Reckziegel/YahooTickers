@@ -42,11 +42,19 @@
 #' library(YahooTickers)
 #'
 #' # get the brazilian index tickers
-#' get_tickers("ibovespa")
+#' get_tickers(ibovespa)
 #'
 #' # get the sp500 stocks tickers
+#' get_tickers(sp500)
+#'
+#' # The \code{exchange} argument should be unquoted.
+#' # This throws an error.
+#' \dontrun{
 #' get_tickers("sp500")
+#' }
 get_tickers <- function(exchange) {
+
+  exchange <- lazyeval::expr_text(exchange)
 
   exchange_arg <- rlang::arg_match(
     arg    = exchange,

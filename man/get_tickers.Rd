@@ -7,7 +7,7 @@
 get_tickers(exchange)
 }
 \arguments{
-\item{exchange}{A single string.}
+\item{exchange}{A single string. There is no need to quote the vector with \code{""}.}
 }
 \value{
 A vector of character strings.

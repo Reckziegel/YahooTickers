@@ -64,7 +64,7 @@ get_stocks <- function(tickers,
           periodicity = periodicity_arg,
           warnings    = TRUE,
           src         = "yahoo",
-          auto.assign = FALSE
+          auto.assign = getOption('getSymbols.auto.assign', FALSE)
         )
       ),
 
@@ -102,7 +102,8 @@ get_stocks <- function(tickers,
       )
     ) %>%
     tidyr::unnest(result) %>%
-    dplyr::select(index, tickers, open, high, low, close, volume, adjusted)
+    dplyr::select(index, tickers, open, high, low, close, volume, adjusted) %>%
+    tibbletime::as_tbl_time(., index = index)
 
   if (simplify) {
 

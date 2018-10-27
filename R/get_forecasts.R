@@ -1,19 +1,25 @@
-#' Tidy Automatic Time Series Forecasting
+#' Automatic Cross Validation for Time Series Forecasting
 #'
-#' @param .tbl
-#' @param .group
-#' @param .col
-#' @param .fun
-#' @param initial
-#' @param assess
-#' @param cumulative
+#'
+#'
+#' @param .tbl A tidy \code{tibble} of the \code{tbl_time} class.
+#' @param .group The column in which the data should be grouped. This will often be a column containing the tickers or stocks names.
+#' @param .col The column names in which the calculation shoud be conducted.
+#' @param .fun A forecasting function from the \code{forecast} package.
+#' @param .initial The period used to train the model in each split.
+#' @param .assess The forecasting horizon.
+#' @param .cumulative If \code{FALSE} forecasts are evaluated in a rolling windown; if \code{TRUE} forecasts accumulate from the origin of each split. The default is \code{TRUE}.
 #' @param ... Additional parameters to be passed to \code{.fun}.
 #'
-#' @return
+#' @return A tidy \code{tibble}.
 #' @export
 #'
 #' @examples
-get_forecasts <- function(.tbl, .group, .col, .fun, initial, assess, cumulative, ...) {
+#' library(YahooTickers)
+#' library(dplyr)
+#'
+#'
+get_forecasts <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...) {
 
   if (!("tbl_time" %in% class(.tbl))) {
     rlang::abort(".tbl must be a 'tbl_time' object. Check the package 'tibbletime' for details.")
@@ -37,9 +43,9 @@ get_forecasts <- function(.tbl, .group, .col, .fun, initial, assess, cumulative,
       .x = data,
       .f = ~  rsample::rolling_origin(
         data       = .x,
-        initial    = initial,
-        assess     = assess,
-        cumulative = cumulative
+        initial    = .initial,
+        assess     = .assess,
+        cumulative = .cumulative
       )
     )
     ) %>%
@@ -72,6 +78,7 @@ get_forecasts <- function(.tbl, .group, .col, .fun, initial, assess, cumulative,
       rmse = purrr::map_dbl(
         .x = oos,
         .f = ~ yardstick::rmse(., truth = !!.col_var, estimate = out_of_sample)),
+      mse  = rmse ^ 2,
       mae  = purrr::map_dbl(
         .x = oos,
         .f = ~ yardstick::mae(., truth = !!.col_var, estimate = out_of_sample)),
