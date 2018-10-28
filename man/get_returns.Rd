@@ -24,7 +24,7 @@ Stock prices are known for been non-stationary. For econometric modeling use \co
 \examples{
 library(YahooTickers)
 library(dplyr)
-get_tickers("dow") \%>\%
+get_tickers(dow) \%>\%
   get_stocks(.) \%>\%
   get_returns(., tickers, arithmetic, adjusted)
 }

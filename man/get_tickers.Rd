@@ -7,7 +7,7 @@
 get_tickers(exchange)
 }
 \arguments{
-\item{exchange}{A single string. There is no need to quote the vector with \code{""}.}
+\item{exchange}{A single string.}
 }
 \value{
 A vector of character strings.
@@ -48,8 +48,14 @@ Currently \code{get_tickers} supports the following stock indexes:
 library(YahooTickers)
 
 # get the brazilian index tickers
-get_tickers("ibovespa")
+get_tickers(ibovespa)
 
 # get the sp500 stocks tickers
+get_tickers(sp500)
+
+# The \\code{exchange} argument should be unquoted.
+# This throws an error.
+\dontrun{
 get_tickers("sp500")
+}
 }

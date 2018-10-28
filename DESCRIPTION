@@ -27,4 +27,9 @@ Imports: curl,
     xml2,
     magrittr,
     rsample,
-    yardstick
+    yardstick,
+    forcats,
+    forecast,
+    lazyeval,
+    lubridate,
+    tibbletime

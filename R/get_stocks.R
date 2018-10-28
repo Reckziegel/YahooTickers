@@ -19,7 +19,7 @@
 #' @examples
 #' # Get stocks from the Merval Index (Argentina)
 #' library(YahooTickers)
-#' ticks <- get_tickers("merval")
+#' ticks <- get_tickers(merval)
 #' get_stocks(ticks, periodicity = "monthly")
 get_stocks <- function(tickers,
                        from        = "2010-01-01",
@@ -50,6 +50,8 @@ get_stocks <- function(tickers,
     quiet     = quiet
   )
 
+  options("getSymbols.warning4.0" = FALSE)
+
   # start downlaod
   stocks <- tickers %>%
     dplyr::mutate(
@@ -64,7 +66,7 @@ get_stocks <- function(tickers,
           periodicity = periodicity_arg,
           warnings    = TRUE,
           src         = "yahoo",
-          auto.assign = getOption('getSymbols.auto.assign', FALSE)
+          auto.assign = FALSE
         )
       ),
 

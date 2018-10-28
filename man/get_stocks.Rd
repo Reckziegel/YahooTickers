@@ -32,6 +32,6 @@ A tidy \code{tibble} if \code{simplify = TRUE} and a \code{list} of two componen
 \examples{
 # Get stocks from the Merval Index (Argentina)
 library(YahooTickers)
-ticks <- get_tickers("merval")
+ticks <- get_tickers(merval)
 get_stocks(ticks, periodicity = "monthly")
 }

@@ -12,13 +12,24 @@
 #' @param ... Additional parameters to be passed to \code{.fun}.
 #'
 #' @return A tidy \code{tibble}.
+#'
+#' @importFrom rlang ":="
+#' @importFrom magrittr "%>%"
+#'
 #' @export
 #'
 #' @examples
 #' library(YahooTickers)
 #' library(dplyr)
+#' library(forecast)
 #'
-#'
+#' # Download and forecast time series using the "auto.arima" function from the forecast package
+#' get_tickers(dow) %>%
+#'   slice(1:5) %>%
+#'   get_stocks(., periodicity = "monthly") %>%
+#'   get_returns(., tickers, arithmetic, adjusted) %>%
+#'   get_forecasts(., tickers, return_adjusted, 60, 1, FALSE, auto.arima,
+#'                 seasonal = FALSE, stationary = TRUE)
 get_forecasts <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...) {
 
   if (!("tbl_time" %in% class(.tbl))) {
@@ -71,8 +82,11 @@ get_forecasts <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .f
     dplyr::group_by(!!.group_var, id) %>%
     dplyr::mutate(
 
-      # add an index
-      !!.index_call := purrr::map(.x = oos, .f = ~ min(.[[!!.index_call]])),
+      # add an index from the assessment perspective
+      !!.index_call := purrr::map(
+        .x = oos,
+        .f = ~ min(rsample::assessment(.)[[!!.index_call]])
+        ),
 
       # scale dependent errors
       rmse = purrr::map_dbl(
@@ -115,7 +129,7 @@ get_forecasts <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .f
     dplyr::ungroup() %>%
 
     # reorder variables
-    dplyr::select(!!.index_call, !!.group_call, !!.col_call, out_of_sample, rmse, mae, mape, mase) %>%
+    dplyr::select(!!.index_call, !!.group_call, !!.col_call, out_of_sample, rmse, mse, mae, mape, mase) %>%
     dplyr::mutate_if(., .predicate = purrr::is_character, .funs = forcats::as_factor)
 
 }

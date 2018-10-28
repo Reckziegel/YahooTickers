@@ -33,6 +33,13 @@ Automatic Cross Validation for Time Series Forecasting
 \examples{
 library(YahooTickers)
 library(dplyr)
+library(forecast)
 
-
+# Download and forecast time series using the "auto.arima" function from the forecast package
+get_tickers(dow) \%>\%
+  slice(1:5) \%>\%
+  get_stocks(., periodicity = "monthly") \%>\%
+  get_returns(., tickers, arithmetic, adjusted) \%>\%
+  get_forecasts(., tickers, return_adjusted, 60, 1, FALSE, auto.arima,
+                seasonal = FALSE, stationary = TRUE)
 }

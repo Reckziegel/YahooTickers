@@ -14,7 +14,7 @@
 #' @examples
 #' library(YahooTickers)
 #' library(dplyr)
-#' get_tickers("dow") %>%
+#' get_tickers(dow) %>%
 #'   get_stocks(.) %>%
 #'   get_returns(., tickers, arithmetic, adjusted)
 get_returns <- function(.tbl, .group, .type, ...) {
