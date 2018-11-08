@@ -2,44 +2,45 @@
 % Please edit documentation in R/get_forecasts.R
 \name{get_forecasts}
 \alias{get_forecasts}
-\title{Automatic Cross Validation for Time Series Forecasting}
+\alias{get_forecasts.default}
+\alias{get_forecasts.tbl}
+\alias{get_forecast.tbl_time}
+\title{True Out-of-Sample Time Series Forecasting}
 \usage{
-get_forecasts(.tbl, .group, .col, .initial, .assess, .cumulative, .fun,
-  ...)
+get_forecasts(.tbl, ...)
+
+\method{get_forecasts}{default}(.tbl, ...)
+
+\method{get_forecasts}{tbl}(.tbl, ...)
+
+get_forecast.tbl_time(.tbl, ...)
 }
 \arguments{
 \item{.tbl}{A tidy \code{tibble} of the \code{tbl_time} class.}
 
-\item{.group}{The column in which the data should be grouped. This will often be a column containing the tickers or stocks names.}
-
-\item{.col}{The column names in which the calculation shoud be conducted.}
-
-\item{.initial}{The period used to train the model in each split.}
-
-\item{.assess}{The forecasting horizon.}
-
-\item{.cumulative}{If \code{FALSE} forecasts are evaluated in a rolling windown; if \code{TRUE} forecasts accumulate from the origin of each split. The default is \code{TRUE}.}
-
-\item{.fun}{A forecasting function from the \code{forecast} package.}
-
-\item{...}{Additional parameters to be passed to \code{.fun}.}
+\item{...}{Additional parameters to be passed to \code{forecast}.}
 }
 \value{
 A tidy \code{tibble}.
 }
 \description{
-Automatic Cross Validation for Time Series Forecasting
+\code{get_forecasts()} extracts the true out-of-sample forecasts from an object previously fitted with \code{get_models()}.
 }
 \examples{
 library(YahooTickers)
 library(dplyr)
 library(forecast)
 
-# Download and forecast time series using the "auto.arima" function from the forecast package
+# Download and forecast time series using the "auto.arima"
+# function from the forecast package
 get_tickers(dow) \%>\%
   slice(1:5) \%>\%
   get_stocks(., periodicity = "monthly") \%>\%
-  get_returns(., tickers, arithmetic, adjusted) \%>\%
-  get_forecasts(., tickers, return_adjusted, 60, 1, FALSE, auto.arima,
-                seasonal = FALSE, stationary = TRUE)
+  get_returns(., tickers, log, TRUE, adjusted) \%>\%
+  get_models(., tickers, return_adjusted, 100, 1, FALSE, auto.arima,
+             seasonal = FALSE, stationary = TRUE) \%>\%
+  get_forecasts(.)
+}
+\seealso{
+\href{https://tidymodels.github.io/rsample/reference/rolling_origin.html}{rolling_origin()}
 }

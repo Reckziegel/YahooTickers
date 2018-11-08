@@ -9,29 +9,39 @@ get_stocks(tickers, from = "2010-01-01", to = Sys.Date(),
   quiet = FALSE)
 }
 \arguments{
-\item{tickers}{A character vector of with the yahoo symbols.}
+\item{tickers}{A character vector with the yahoo symbols.}
 
-\item{from}{A date in the format YYYY-MM-DD.}
+\item{from}{A date in the format \code{YYYY-MM-DD}.}
 
-\item{to}{A date in the format YYYY-MM-DD.}
+\item{to}{A date in the format \code{YYYY-MM-DD}.}
 
 \item{periodicity}{One of: \code{daily}, \code{weely} or \code{monthly}.}
 
-\item{simplify}{If TRUE, a \code{tibble} is returned; if FALSE a list with tow elements is returned: \code{result} and \code{error}. The defaul is TRUE.}
+\item{simplify}{If TRUE, a \code{tibble} is returned. If FALSE a list with two elements is returned:
+
+  \itemize{
+    \item \code{result}: with the downloads that sucedded;
+    \item \code{error}: with the stocks not covered by the Yahoo Finance.
+  }
+
+The defaul is TRUE.}
 
 \item{otherwise}{Argument passed to \code{purrr::safely}.}
 
 \item{quiet}{Argument passed to \code{purrr::safely}. A notification is showed whenever an error occurs.}
 }
 \value{
-A tidy \code{tibble} if \code{simplify = TRUE} and a \code{list} of two components if \code{simplify = FALSE}.
+A tidy \code{tibble} if \code{simplify} is \code{TRUE} and a \code{list} of two components if \code{simplify} is \code{FALSE}.
 }
 \description{
-\code{get_stocks} is a time saver that allows you to quickly download stock indexes from the the \href{https://finance.yahoo.com/}{Yahoo Finance} without having to run \code{for} loops or worrying about coertion rules between different object classes. The output is always a tidy \code{tibble}.
+\code{get_stocks()} allows you to quickly download stock indexes from the the \href{https://finance.yahoo.com/}{Yahoo Finance} without having to run \code{for} loops.
 }
 \examples{
-# Get stocks from the Merval Index (Argentina)
+# Get stocks from the Merval Stock Index (Argentina)
 library(YahooTickers)
 ticks <- get_tickers(merval)
 get_stocks(ticks, periodicity = "monthly")
+}
+\seealso{
+\href{https://purrr.tidyverse.org/reference/safely.html}{safely()}
 }

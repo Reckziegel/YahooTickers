@@ -21,19 +21,7 @@ globalVariables(
     "New Index Series Code",
     "Scrip Code (on BSE)",
     "Symbol",
-    "Stock Code",
-    "data",
-    "samples",
-    "splits",
-    "fits",
-    "id",
-    "oos",
-    "rmse",
-    "out_of_sample",
-    "mse",
-    "mae",
-    "mape",
-    "mase"
+    "Stock Code"
   )
 
 )

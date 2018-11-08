@@ -13,7 +13,7 @@ get_tickers(exchange)
 A vector of character strings.
 }
 \description{
-\code{get_tickers} helps you to get the tickers of a specific stock index.
+\code{get_tickers()} helps you to get the tickers of a specific stock index.
 }
 \details{
 Currently \code{get_tickers} supports the following stock indexes:
@@ -47,14 +47,13 @@ Currently \code{get_tickers} supports the following stock indexes:
 \examples{
 library(YahooTickers)
 
-# get the brazilian index tickers
+# get the brazilian stocks index tickers
 get_tickers(ibovespa)
 
 # get the sp500 stocks tickers
 get_tickers(sp500)
 
-# The \\code{exchange} argument should be unquoted.
-# This throws an error.
+# The exchange argument should be unquoted. This throws an error.
 \dontrun{
 get_tickers("sp500")
 }

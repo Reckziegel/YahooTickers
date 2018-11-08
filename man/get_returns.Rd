@@ -2,29 +2,46 @@
 % Please edit documentation in R/get_returns.R
 \name{get_returns}
 \alias{get_returns}
+\alias{get_returns.default}
+\alias{get_returns.tbl_df}
+\alias{get_returns.tbl_time}
 \title{Calculate Returns From Stock Prices}
 \usage{
-get_returns(.tbl, .group, .type, ...)
+get_returns(.tbl, .group, .type, .omit_na = TRUE, ...)
+
+\method{get_returns}{default}(.tbl, .group, .type, .omit_na = TRUE, ...)
+
+\method{get_returns}{tbl_df}(.tbl, .group, .type, .omit_na = TRUE, ...)
+
+\method{get_returns}{tbl_time}(.tbl, .group, .type, .omit_na = TRUE, ...)
 }
 \arguments{
 \item{.tbl}{A tidy \code{tibble}.}
 
-\item{.group}{The column in which the data should be grouped. This will often be a column containing stock tickers or stocks names.}
+\item{.group}{The column in which the data should be grouped. This will often be a column with stock tickers or stocks names.}
 
-\item{.type}{The method used to calculate returns. One of: \code{log} or \code{arithmetic}.}
+\item{.type}{The method used to calculate returns. One of:
 
-\item{...}{The column (columns) in which the calculation shoud be conducted.}
+  \itemize{
+    \item \code{log}
+    \item \code{arithmetic}
+ }}
+
+\item{.omit_na}{Should NA values be omitted? Default is TRUE.}
+
+\item{...}{The column (or columns) in which the calculation shoud be conducted.}
 }
 \value{
 A tidy \code{tibble}.
 }
 \description{
-Stock prices are known for been non-stationary. For econometric modeling use \code{get_returns()}.
+Stock prices are known for been non-stationary. Use \code{get_returns()} as a preprocessing step for econometric modeling.
 }
 \examples{
 library(YahooTickers)
 library(dplyr)
 get_tickers(dow) \%>\%
   get_stocks(.) \%>\%
-  get_returns(., tickers, arithmetic, adjusted)
+  get_returns(., .group = tickers, .type = arithmetic,
+              .omit_na = TRUE, adjusted)
 }

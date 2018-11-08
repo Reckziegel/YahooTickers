@@ -1,23 +1,34 @@
 #' A wrapper over \code{getSymbols} that maps over index components.
 #'
-#' \code{get_stocks} is a time saver that allows you to quickly download stock indexes from the the \href{https://finance.yahoo.com/}{Yahoo Finance} without having to run \code{for} loops or worrying about coertion rules between different object classes. The output is always a tidy \code{tibble}.
+#' \code{get_stocks()} allows you to quickly download stock indexes from the the \href{https://finance.yahoo.com/}{Yahoo Finance} without having to run \code{for} loops.
 #'
-#' @param tickers A character vector of with the yahoo symbols.
-#' @param from A date in the format YYYY-MM-DD.
-#' @param to A date in the format YYYY-MM-DD.
+#' @param tickers A character vector with the yahoo symbols.
+#' @param from A date in the format \code{YYYY-MM-DD}.
+#' @param to A date in the format \code{YYYY-MM-DD}.
 #' @param periodicity One of: \code{daily}, \code{weely} or \code{monthly}.
-#' @param simplify If TRUE, a \code{tibble} is returned; if FALSE a list with tow elements is returned: \code{result} and \code{error}. The defaul is TRUE.
+#' @param simplify If TRUE, a \code{tibble} is returned. If FALSE a list with two elements is returned:
+#'
+#'   \itemize{
+#'     \item \code{result}: with the downloads that sucedded;
+#'     \item \code{error}: with the stocks not covered by the Yahoo Finance.
+#'   }
+#'
+#' The defaul is TRUE.
+#'
 #' @param otherwise Argument passed to \code{purrr::safely}.
 #' @param quiet Argument passed to \code{purrr::safely}. A notification is showed whenever an error occurs.
 #'
-#' @return A tidy \code{tibble} if \code{simplify = TRUE} and a \code{list} of two components if \code{simplify = FALSE}.
+#' @return A tidy \code{tibble} if \code{simplify} is \code{TRUE} and a \code{list} of two components if \code{simplify} is \code{FALSE}.
 #'
 #' @importFrom magrittr "%>%"
+#' @importFrom rlang .data
+#'
+#' @seealso \href{https://purrr.tidyverse.org/reference/safely.html}{safely()}
 #'
 #' @export
 #'
 #' @examples
-#' # Get stocks from the Merval Index (Argentina)
+#' # Get stocks from the Merval Stock Index (Argentina)
 #' library(YahooTickers)
 #' ticks <- get_tickers(merval)
 #' get_stocks(ticks, periodicity = "monthly")
@@ -72,14 +83,14 @@ get_stocks <- function(tickers,
 
       # unnest result
       result = purrr::map(
-        .x = download,
+        .x = .data$download,
         .f = "result"
       ) %>%
         purrr::map(.f = timetk::tk_tbl),
 
       # unnest error
       error = purrr::map_chr(
-        .x = download,
+        .x = .data$download,
         .f = ~ dplyr::if_else(
           condition = purrr::is_null(.$error),
           true      = NA_character_,
@@ -89,9 +100,9 @@ get_stocks <- function(tickers,
     )
 
   stocks_simple <- stocks %>%
-    dplyr::filter(is.na(error)) %>%
+    dplyr::filter(is.na(.data$error)) %>%
     dplyr::mutate(result = purrr::map(
-      .x = result,
+      .x = .data$result,
       .f = ~ dplyr::rename(
         .data    = .,
         open     = 2,
@@ -103,9 +114,9 @@ get_stocks <- function(tickers,
         )
       )
     ) %>%
-    tidyr::unnest(result) %>%
-    dplyr::select(index, tickers, open, high, low, close, volume, adjusted) %>%
-    tibbletime::as_tbl_time(., index = index)
+    tidyr::unnest(.data$result) %>%
+    dplyr::select(.data$index, .data$tickers, .data$open, .data$high, .data$low, .data$close, .data$volume, .data$adjusted) %>%
+    tibbletime::as_tbl_time(., index = "index")
 
   if (simplify) {
 
@@ -114,8 +125,8 @@ get_stocks <- function(tickers,
   } else {
 
     error_simple <- stocks %>%
-      dplyr::filter(!is.na(error)) %>%
-      dplyr::select(error)
+      dplyr::filter(!is.na(.data$error)) %>%
+      dplyr::select(.data$error)
 
     if (nrow(error_simple) != 0) {
 

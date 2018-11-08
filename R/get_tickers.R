@@ -1,6 +1,6 @@
 #' Get The Tickers Required by the Yahoo API
 #'
-#' \code{get_tickers} helps you to get the tickers of a specific stock index.
+#' \code{get_tickers()} helps you to get the tickers of a specific stock index.
 #'
 #' Currently \code{get_tickers} supports the following stock indexes:
 #'
@@ -41,14 +41,13 @@
 #' @examples
 #' library(YahooTickers)
 #'
-#' # get the brazilian index tickers
+#' # get the brazilian stocks index tickers
 #' get_tickers(ibovespa)
 #'
 #' # get the sp500 stocks tickers
 #' get_tickers(sp500)
 #'
-#' # The \code{exchange} argument should be unquoted.
-#' # This throws an error.
+#' # The exchange argument should be unquoted. This throws an error.
 #' \dontrun{
 #' get_tickers("sp500")
 #' }
