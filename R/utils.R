@@ -16,9 +16,10 @@ get_sp500 <- function() {
   # rvest functions: Get table of stocks
   path %>%
     xml2::read_html() %>%
-    rvest::html_node(., css = "table") %>%
-    rvest::html_table(.) %>%
-    dplyr::rename(tickers = `Ticker symbol`) %>%
+    rvest::html_node(css = "table") %>%
+    rvest::html_table(., fill = TRUE) %>%
+    tibble::set_tidy_names() %>%
+    dplyr::rename(tickers = "Symbol") %>%
     dplyr::select(tickers) %>%
     dplyr::as_tibble()
 
@@ -32,11 +33,11 @@ get_dow <- function() {
 
   path %>%
     xml2::read_html() %>%
-    rvest::html_nodes(css = "table") %>%
+    rvest::html_node(css = "table") %>%
     rvest::html_table() %>%
     .[[1]] %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = "Symbol") %>%
+    dplyr::rename(tickers = "value") %>%
     dplyr::select(tickers)
 
 }
@@ -74,7 +75,7 @@ get_nyse <- function() {
     paths %>%
       xml2::read_html() %>%
       rvest::html_nodes(css = "table") %>%
-      rvest::html_table(.) %>%
+      rvest::html_table() %>%
       .[[5]] %>%
       dplyr::select(Company) %>%
       tidyr::separate(Company, into = c("tickers", "company"), extra = "drop") %>%
@@ -102,7 +103,7 @@ get_amex <- function() {
     paths %>%
       xml2::read_html() %>%
       rvest::html_nodes(css = "table") %>%
-      rvest::html_table(.) %>%
+      rvest::html_table() %>%
       .[[4]] %>%
       dplyr::select(Company) %>%
       tidyr::separate(Company, into = c("tickers", "company"), extra = "drop") %>%
@@ -120,7 +121,7 @@ get_amex <- function() {
 get_russell2000 <- function() {
 
   path <- "https://money.cnn.com/data/markets/russell/?page="
-  pages <- 1:87
+  pages <- 1:86
   paths <- stringr::str_c(path, pages)
 
   message("Yahoo does not provide the Russell 2000 components. Tickers been downloaded from: money.cnn.com/data/markets/russell")
@@ -130,7 +131,7 @@ get_russell2000 <- function() {
     paths %>%
       xml2::read_html() %>%
       rvest::html_nodes(css = "table") %>%
-      rvest::html_table(.) %>%
+      rvest::html_table() %>%
       .[[4]] %>%
       dplyr::select(Company) %>%
       tidyr::separate(Company, into = c("tickers", "company"), extra = "drop") %>%
@@ -157,8 +158,8 @@ get_ftse100 <- function() {
 
     paths %>%
       xml2::read_html() %>%
-      rvest::html_nodes(., css = "table") %>%
-      rvest::html_table(.) %>%
+      rvest::html_nodes(css = "table") %>%
+      rvest::html_table() %>%
       .[[1]] %>%
       tibble::set_tidy_names(., quiet = TRUE) %>%
       dplyr::as_tibble() %>%
@@ -257,7 +258,7 @@ get_hangseng <- function() {
   path %>%
     xml2::read_html() %>%
     rvest::html_nodes(css = "table") %>%
-    rvest::html_table() %>%
+    rvest::html_table(.) %>%
     .[[1]] %>%
     dplyr::as_tibble() %>%
     dplyr::rename(tickers = "Ticker") %>%
@@ -414,7 +415,7 @@ get_ibov  <- function() {
   path %>%
     xml2::read_html() %>%
     rvest::html_nodes(css = "table") %>%
-    rvest::html_table() %>%
+    rvest::html_table(.) %>%
     .[[1]] %>%
     dplyr::as_tibble() %>%
     dplyr::rename(tickers = "Ticker") %>%

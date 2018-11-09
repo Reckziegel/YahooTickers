@@ -1,6 +1,6 @@
 #' Get The Tickers Required by the Yahoo API
 #'
-#' \code{get_tickers} helps you to get the tickers of a specific stock index.
+#' \code{get_tickers()} helps you to get the tickers of a specific stock index.
 #'
 #' Currently \code{get_tickers} supports the following stock indexes:
 #'
@@ -41,12 +41,23 @@
 #' @examples
 #' library(YahooTickers)
 #'
-#' # get the brazilian index tickers
-#' get_tickers("ibovespa")
+#' # get the brazilian stocks index tickers
+#' get_tickers(ibovespa)
 #'
 #' # get the sp500 stocks tickers
+#' get_tickers(sp500)
+#'
+#' # The exchange argument should be unquoted. This throws an error.
+#' \dontrun{
 #' get_tickers("sp500")
+#' }
 get_tickers <- function(exchange) {
+
+  exchange <- lazyeval::expr_text(exchange)
+  exchange <- exchange %>%
+    stringr::str_trim(., side = "both") %>%
+    stringr::str_remove(., " ") %>%
+    stringr::str_to_lower(.)
 
   exchange_arg <- rlang::arg_match(
     arg    = exchange,
@@ -55,11 +66,6 @@ get_tickers <- function(exchange) {
                "bursa", "nzx50", "kospi", "taiex", "tsx", "ibovespa", "ipc", "ipsa",
                "merval")
   )
-
-  exchange <- exchange_arg %>%
-    stringr::str_trim(., side = "both") %>%
-    stringr::str_remove(., " ") %>%
-    stringr::str_to_lower(.)
 
   tickers <- switch(exchange_arg,
                     sp500       = get_sp500(),

@@ -18,52 +18,96 @@ knitr::opts_chunk$set(
 
 [![Travis-CI Build Status](https://travis-ci.org/Reckziegel/YahooTickers.svg?branch=master)](https://travis-ci.org/Reckziegel/YahooTickers)
 
-The goal of YahooTickers is to help users to easily get stock index constituents from [Yahoo Finance](https://finance.yahoo.com/) without having to run complicated `for` loops. This may be specially useful for users that need to repeatably test investment strategies in different markets, but also convenient if data is needed for it's side effects (plotting).  
+The goal of YahooTickers is to easily get stock index constituents from [Yahoo Finance](https://finance.yahoo.com/) without having to worry about complicated `for` loops. This may be useful if you wish to focus as quickly as possible in time-series *modeling*, but also convenient if data is needed for it's side effects (e.g. plotting).  
+
+The package depends heavly on [quantmod](https://github.com/joshuaulrich/quantmod), [rsample](https://github.com/topepo/rsample), [sweep](https://github.com/business-science/sweep) and [forecast](https://github.com/robjhyndman/forecast) projects.
 
 
 ## Instalation
 
-You can install FromQuandl from github with:
+You can install YahooTickers from github with:
 
 ```{r eval = FALSE}
-
 # install.packages("devtools")
-devtools::install_github("Reckziegel/FromQuandl")
-
+devtools::install_github("Reckziegel/YahooTickers")
 ```
 
 
-## Example
+## Examples
 
-Suppose we want to download all the stock constituents of the Dow Jones Industrial Average Index. This can easily be done with `get_tickers()` and `get_stock()` in one pipeline.
+To download *all* the stock constituents of the Dow Jones Industrial Average use `get_tickers()` and `get_stock()` in one pipeline.
 
 ```{r example1}
 library(YahooTickers)
 library(dplyr)
 
-get_tickers("dow") %>% 
+get_tickers(dow) %>% 
   get_stocks(., periodicity = "monthly")
-
 ```
 
-Since the data is "tidy" it's ready to be used in conjunction with `ggplot2` and the `dplyr` verbs for further manipulation.
+With additional functions provided in the package it's possible to fit a model in a rolling or expanding time window. This is done by `get_models()`.
 
-```{r example2}
+```{r example2, warning=FALSE, error=FALSE}
 library(YahooTickers)
 library(dplyr)
-library(ggplot2)
+library(forecast)
 
-get_tickers("dow") %>% 
-  get_stocks(., periodicity = "monthly") %>% 
-  ggplot(aes(x = index, y = close, color = tickers)) + 
-  geom_line(show.legend = FALSE, size = 1) + 
-  scale_y_log10() + 
-  facet_wrap(~ tickers, scales = "free_y") + 
-  labs(title    = "Dow Jones Industrial Average",
-       subtitle = "Monthly data from 2010-01-01 until 2018-10-25",
-       caption  = "Source: Yahoo Finance",
-       x        = "", 
-       y        = "") 
+get_tickers(merval) %>%
+  get_stocks(
+    tickers     = ., 
+    periodicity = "monthly",
+    quiet       = TRUE
+    ) %>% 
+  get_returns(
+    .tbl     = ., 
+    .group   = tickers, 
+    .type    = log, 
+    .omit_na = TRUE, 
+    adjusted
+    ) %>% 
+  get_models(
+    .tbl        = .,
+    .group      = tickers, 
+    .col        = return_adjusted, 
+    .initial    = 100, 
+    .assess     = 1, 
+    .cumulative = TRUE, 
+    .fun        = ets
+    ) 
+```
+
+In this case, the the [ETS](http://pkg.robjhyndman.com/forecast/reference/ets.html) function was used to fit the first 100 observations on a expanding window, `cumulative = TRUE`. The output contains the fitted parameters, selection criterias, as some traditional in-sample error metrics. 
+
+To extract the true out-of-sample forecasts use `get_forecasts()`. This function automatically identifies the `.assess` argument in `get_models()` and uses it as a target for the forecast horizon. 
+
+```{r example3, warning=FALSE, error=FALSE}
+library(YahooTickers)
+library(dplyr)
+library(forecast)
+
+get_tickers(merval) %>%
+  get_stocks(
+    tickers     = ., 
+    periodicity = "monthly",
+    quiet       = TRUE
+    ) %>% 
+  get_returns(
+    .tbl     = ., 
+    .group   = tickers, 
+    .type    = log, 
+    .omit_na = TRUE, 
+    adjusted
+    ) %>% 
+  get_models(
+    .tbl        = .,
+    .group      = tickers, 
+    .col        = return_adjusted, 
+    .initial    = 100, 
+    .assess     = 1, 
+    .cumulative = TRUE, 
+    .fun        = ets
+    )  %>% 
+  get_forecasts(.)
 
 ```
 
@@ -93,6 +137,7 @@ Currently, `YahooTickers` supports the following stock indexes:
 * `ipsa`: S&P/CLX IPSA (Chile)
 * `merval`: Buenos Aires Stock Exchange Merval Index (Argentina)
 
+
 ## A Warning
 
-The [Yahoo Finance](https://finance.yahoo.com/) API works reasonably well, but there are cases in which does not cover or provide historical data for all stocks in an index universe. The `bel20` it's a good example: despite officially having 20 components, Yahoo Finance only maintain data for 4 stocks. The message is clear: **always check the data after downloading!**
+The [Yahoo Finance](https://finance.yahoo.com/) API works reasonably well but there are cases in which it does not cover historical data for all stocks in an index universe. The `bel20` it's a good example: despite officially having 20 components, Yahoo Finance only maintains data for 4 stocks. Thus, it is recommended to **always check the data after downloading it!**

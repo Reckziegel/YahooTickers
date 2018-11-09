@@ -11,18 +11,29 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
-Suggests: testthat
-Imports: curl,
+Suggests: 
+    testthat,
+    roxygen2
+Imports: 
+    curl,
     dplyr,
     purrr,
     quantmod,
     readr,
     readxl,
-    rlang,
+    rlang (>= 0.1.2),
     rvest,
     stringr,
     tibble,
     tidyr,
     timetk,
     xml2,
-    magrittr
+    magrittr,
+    rsample,
+    yardstick,
+    forcats,
+    forecast,
+    lazyeval,
+    lubridate,
+    tibbletime,
+    sweep
