@@ -54,6 +54,10 @@
 get_tickers <- function(exchange) {
 
   exchange <- lazyeval::expr_text(exchange)
+  exchange <- exchange %>%
+    stringr::str_trim(., side = "both") %>%
+    stringr::str_remove(., " ") %>%
+    stringr::str_to_lower(.)
 
   exchange_arg <- rlang::arg_match(
     arg    = exchange,
@@ -62,11 +66,6 @@ get_tickers <- function(exchange) {
                "bursa", "nzx50", "kospi", "taiex", "tsx", "ibovespa", "ipc", "ipsa",
                "merval")
   )
-
-  exchange <- exchange_arg %>%
-    stringr::str_trim(., side = "both") %>%
-    stringr::str_remove(., " ") %>%
-    stringr::str_to_lower(.)
 
   tickers <- switch(exchange_arg,
                     sp500       = get_sp500(),

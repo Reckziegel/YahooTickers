@@ -22,6 +22,7 @@
 #' library(YahooTickers)
 #' library(dplyr)
 #' get_tickers(dow) %>%
+#'   slice(1:3) %>%
 #'   get_stocks(.) %>%
 #'   get_returns(., .group = tickers, .type = arithmetic,
 #'               .omit_na = TRUE, adjusted)
@@ -154,7 +155,7 @@ get_returns.tbl_time <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
 
 
   # should NA's be deleted?
-  if (.omit_na) .tbl <- na.omit(.tbl)
+  if (.omit_na) .tbl <- stats::na.omit(.tbl)
 
   # output
   return(.tbl)

@@ -49,6 +49,11 @@ get_stocks <- function(tickers,
     rlang::abort("The quiet argument must be TRUE or FALSE.")
   }
 
+  periodicity <- periodicity %>%
+    stringr::str_trim(., side = "both") %>%
+    stringr::str_remove(., " ") %>%
+    stringr::str_to_lower(.)
+
   periodicity_arg <- rlang::arg_match(
     arg    = periodicity,
     values = c("daily", "weely", "monthly")
@@ -115,7 +120,16 @@ get_stocks <- function(tickers,
       )
     ) %>%
     tidyr::unnest(.data$result) %>%
-    dplyr::select(.data$index, .data$tickers, .data$open, .data$high, .data$low, .data$close, .data$volume, .data$adjusted) %>%
+    dplyr::select(
+      .data$index,
+      .data$tickers,
+      .data$open,
+      .data$high,
+      .data$low,
+      .data$close,
+      .data$volume,
+      .data$adjusted
+      ) %>%
     tibbletime::as_tbl_time(., index = "index")
 
   if (simplify) {
