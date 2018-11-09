@@ -20,7 +20,7 @@ devtools::install_github("Reckziegel/YahooTickers")
 Examples
 --------
 
-Suppose we want to download *all* the stock constituents of the Dow Jones Industrial Average. This can easily be done with `get_tickers()` and `get_stock()` in one pipeline.
+To download *all* the stock constituents of the Dow Jones Industrial Average use `get_tickers()` and `get_stocks()` in one pipeline.
 
 ``` r
 library(YahooTickers)
@@ -45,7 +45,7 @@ get_tickers(dow) %>%
 #> # ... with 3,200 more rows
 ```
 
-Usign additional functions provided in the package it's possible to fit a model in a rolling or expanding time window. This is done by `get_models()`.
+With additional functions provided in the package it's possible to fit a model in a rolling or expanding time window. This is done by `get_models()`.
 
 ``` r
 library(YahooTickers)
@@ -94,7 +94,7 @@ get_tickers(merval) %>%
 
 In this case, the the [ETS](http://pkg.robjhyndman.com/forecast/reference/ets.html) function was used to fit the first 100 observations on a expanding window, `cumulative = TRUE`. The output contains the fitted parameters, selection criterias, as some in-sample error metrics.
 
-To extract the true out-of-sample forecasts use `get_forecasts()`. This function automatically identifies the `.assess` argument and uses it as a target for the forecast horizon.
+To extract the true out-of-sample forecasts use `get_forecasts()`. This function automatically identifies the `.assess` argument in `get_models()` and uses it as a target for the forecast horizon.
 
 ``` r
 library(YahooTickers)

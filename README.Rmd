@@ -33,7 +33,7 @@ devtools::install_github("Reckziegel/YahooTickers")
 
 ## Examples
 
-To download *all* the stock constituents of the Dow Jones Industrial Average use `get_tickers()` and `get_stock()` in one pipeline.
+To download *all* the stock constituents of the Dow Jones Industrial Average use `get_tickers()` and `get_stocks()` in one pipeline.
 
 ```{r example1}
 library(YahooTickers)
