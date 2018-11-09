@@ -3,8 +3,6 @@
 YahooTickers
 ============
 
-[![Travis-CI Build Status](https://travis-ci.org/Reckziegel/YahooTickers.svg?branch=master)](https://travis-ci.org/Reckziegel/YahooTickers)
-
 The goal of YahooTickers is to help users to easily get stock index constituents from [Yahoo Finance](https://finance.yahoo.com/) without having to worry about complicated `for` loops. This may be useful if you wish to focus as quickly as possible in time-series *modeling*, but also convenient if data is needed for it's side effects (e.g. plotting).
 
 The package depends heavly on [quantmod](https://github.com/joshuaulrich/quantmod), [rsample](https://github.com/topepo/rsample), [sweep](https://github.com/business-science/sweep) and [forecast](https://github.com/robjhyndman/forecast) projects.
