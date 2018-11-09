@@ -41,6 +41,7 @@ Stock prices are known for been non-stationary. Use \code{get_returns()} as a pr
 library(YahooTickers)
 library(dplyr)
 get_tickers(dow) \%>\%
+  slice(1:3) \%>\%
   get_stocks(.) \%>\%
   get_returns(., .group = tickers, .type = arithmetic,
               .omit_na = TRUE, adjusted)
