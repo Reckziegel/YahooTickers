@@ -11,7 +11,7 @@
 #'     \item \code{arithmetic}
 #'  }
 #'
-#' @param .omit_na Should NA values be omitted? Default is TRUE.
+#' @param .omit_na Should NA values be omitted? Default is \code{FALSE} (NA's are replaced by \code{0}).
 #' @param ... The column (or columns) in which the calculation shoud be conducted.
 #'
 #' @return A tidy \code{tibble}.
@@ -26,7 +26,7 @@
 #'   get_stocks(.) %>%
 #'   get_returns(., .group = tickers, .type = arithmetic,
 #'               .omit_na = TRUE, adjusted)
-get_returns <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
+get_returns <- function(.tbl, .group, .type, .omit_na = FALSE, ...) {
 
   UseMethod("get_returns", .tbl)
 
@@ -38,7 +38,7 @@ get_returns <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
 
 #' @rdname get_returns
 #' @export
-get_returns.default <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
+get_returns.default <- function(.tbl, .group, .type, .omit_na = FALSE, ...) {
 
   rlang::abort(".tbl must be a tibble or a tbl_time object.")
 
@@ -50,7 +50,7 @@ get_returns.default <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
 
 #' @rdname get_returns
 #' @export
-get_returns.tbl_df <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
+get_returns.tbl_df <- function(.tbl, .group, .type, .omit_na = FALSE, ...) {
 
   # coerce to tbl_time
   if (!("tbl_time" %in% class(.tbl))) {
@@ -92,18 +92,33 @@ get_returns.tbl_df <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
     .x = .mutate_vars,
     .f = function(var) dplyr::expr(.return(!!var))
   )
-  names(.mutate_vars) <- stringr::str_c("return_", names(.mutate_vars))
+  .mutate_vars_names <- names(.mutate_vars)
 
 
   # data wrangling
   .tbl <- .tbl %>%
     dplyr::group_by(!!.group_var) %>%
-    dplyr::mutate(!!.index_var, !!!.mutate_vars) %>%
+    dplyr::mutate(!!.index_var, .mutate_vars_names := !!! .mutate_vars) %>%
     dplyr::ungroup() %>%
-    dplyr::select(!!.index_var, !!.group_var, dplyr::starts_with("return"))
+    dplyr::select(!!.index_var, !!.group_var, .mutate_vars_names)
 
   # should NA's be deleted?
-  if (.omit_na) .tbl <- stats::na.omit(.tbl)
+  if (.omit_na) {
+
+    .tbl <- stats::na.omit(.tbl)
+
+  } else {
+
+    .tbl <- .tbl %>%
+      dplyr::group_by(!! .group_var) %>%
+      purrr::modify_if(
+        .p = purrr::map_lgl(.x = ., .f = ~ NA %in% .x),
+        .f = ~ .x %>%
+          tidyr::replace_na(list(0)) %>%
+          unlist()
+      )
+
+  }
 
   # output
   return(.tbl)
@@ -116,7 +131,7 @@ get_returns.tbl_df <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
 
 #' @rdname get_returns
 #' @export
-get_returns.tbl_time <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
+get_returns.tbl_time <- function(.tbl, .group, .type, .omit_na = FALSE, ...) {
 
 
   # return function
@@ -143,19 +158,34 @@ get_returns.tbl_time <- function(.tbl, .group, .type, .omit_na = TRUE, ...) {
     .x = .mutate_vars,
     .f = function(var) dplyr::expr(.return(!!var))
     )
-  names(.mutate_vars) <- stringr::str_c("return_", names(.mutate_vars))
+  .mutate_vars_names <- names(.mutate_vars)
 
 
   # data wrangling
   .tbl <- .tbl %>%
     dplyr::group_by(!!.group_var) %>%
-    dplyr::mutate(!!.index_var, !!!.mutate_vars) %>%
+    dplyr::mutate(!!.index_var, .mutate_vars_names := !!! .mutate_vars) %>%
     dplyr::ungroup() %>%
-    dplyr::select(!!.index_var, !!.group_var, dplyr::starts_with("return"))
+    dplyr::select(!!.index_var, !!.group_var, .mutate_vars_names)
 
 
   # should NA's be deleted?
-  if (.omit_na) .tbl <- stats::na.omit(.tbl)
+  if (.omit_na) {
+
+    .tbl <- stats::na.omit(.tbl)
+
+  } else {
+
+    .tbl <- .tbl %>%
+      dplyr::group_by(!! .group_var) %>%
+      purrr::modify_if(
+        .p = purrr::map_lgl(.x = ., .f = ~ NA %in% .x),
+        .f = ~ .x %>%
+          tidyr::replace_na(list(0)) %>%
+          unlist()
+      )
+
+  }
 
   # output
   return(.tbl)
