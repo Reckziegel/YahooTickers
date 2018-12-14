@@ -10,30 +10,29 @@ Description: Download stock constituents from several stock indexes. YahooTicker
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: 
     testthat,
     roxygen2
 Imports: 
-    curl,
-    dplyr,
-    purrr,
-    quantmod,
-    readr,
-    readxl,
+    curl (>= 3.2),
+    dplyr (>= 0.7.7),
+    purrr (>= 0.2.5),
+    quantmod (>= 0.4.13),
+    readr (>= 1.1.1),
+    readxl (>= 1.1.0),
     rlang (>= 0.1.2),
-    rvest,
-    stringr,
-    tibble,
-    tidyr,
-    timetk,
-    xml2,
-    magrittr,
-    rsample,
-    yardstick,
-    forcats,
-    forecast,
-    lazyeval,
-    lubridate,
-    tibbletime,
-    sweep
+    rvest (>= 0.3.2),
+    stringr (>= 1.3.1), 
+    tibble (>= 1.4.2),
+    tidyr (>= 0.8.2),
+    timetk (>= 0.1.1.1),
+    xml2 (>= 1.2.0),
+    magrittr (>= 1.5),
+    rsample (>= 0.0.3),
+    forcats (>= 0.3.0),
+    forecast (>= 8.4),
+    lazyeval (>= 0.2.1),
+    lubridate (>= 1.7.4),
+    tibbletime (>= 0.1.1),
+    sweep (>= 0.2.1.1)

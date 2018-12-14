@@ -7,13 +7,14 @@
 \alias{get_returns.tbl_time}
 \title{Calculate Returns From Stock Prices}
 \usage{
-get_returns(.tbl, .group, .type, .omit_na = TRUE, ...)
+get_returns(.tbl, .group, .type, .omit_na = FALSE, ...)
 
-\method{get_returns}{default}(.tbl, .group, .type, .omit_na = TRUE, ...)
+\method{get_returns}{default}(.tbl, .group, .type, .omit_na = FALSE, ...)
 
-\method{get_returns}{tbl_df}(.tbl, .group, .type, .omit_na = TRUE, ...)
+\method{get_returns}{tbl_df}(.tbl, .group, .type, .omit_na = FALSE, ...)
 
-\method{get_returns}{tbl_time}(.tbl, .group, .type, .omit_na = TRUE, ...)
+\method{get_returns}{tbl_time}(.tbl, .group, .type, .omit_na = FALSE,
+  ...)
 }
 \arguments{
 \item{.tbl}{A tidy \code{tibble}.}
@@ -27,7 +28,7 @@ get_returns(.tbl, .group, .type, .omit_na = TRUE, ...)
     \item \code{arithmetic}
  }}
 
-\item{.omit_na}{Should NA values be omitted? Default is TRUE.}
+\item{.omit_na}{Should NA values be omitted? Default is \code{FALSE} (NA's are replaced by \code{0}).}
 
 \item{...}{The column (or columns) in which the calculation shoud be conducted.}
 }
