@@ -45,7 +45,7 @@
 #' # Download and forecast time series using the "auto.arima" function
 #' # from the forecast package
 #' get_tickers(dow) %>%
-#'   slice(1:3) %>%
+#'   slice(1:2) %>%
 #'   get_stocks(., periodicity = "monthly") %>%
 #'   get_returns(., tickers, arithmetic, TRUE, ret_adj = adjusted) %>%
 #'   get_models(., tickers, ret_adj, 60, 1, FALSE, auto.arima,
@@ -75,6 +75,10 @@ get_models.default <- function(.tbl, .group, .col, .initial, .assess, .cumulativ
 #' @rdname get_models
 #' @export
 get_models.tbl_df <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...) {
+
+
+  # stop if ".fun" is not in the forecast package
+  validate_funs(.fun)
 
   # coerce to tbl_time
   if (!("tbl_time" %in% class(.tbl))) {
@@ -159,6 +163,10 @@ get_models.tbl_df <- function(.tbl, .group, .col, .initial, .assess, .cumulative
 #' @export
 get_models.tbl_time <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...) {
 
+
+  # stop if ".fun" is not in the forecast package
+  validate_funs(.fun)
+
   #tidy eval
   .group_expr <- dplyr::enquo(.group)
   .col_expr   <- dplyr::enquo(.col)
@@ -216,3 +224,4 @@ get_models.tbl_time <- function(.tbl, .group, .col, .initial, .assess, .cumulati
   return(.tbl)
 
 }
+

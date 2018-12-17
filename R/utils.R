@@ -1,11 +1,13 @@
 #' A collection of utility functions
 #'
-#' @importFrom magrittr "%>%"
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
 #' @name utils
 NULL
 
+
+# Web-scrapping functions -------------------------------------------------
 
 #' @rdname utils
 get_sp500 <- function() {
@@ -564,3 +566,34 @@ get_merval <- function() {
     dplyr::select(.data$tickers)
 
 }
+
+
+# Other Auxiliary Functions -----------------------------------------------
+
+#' @rdname utils
+validate_funs <- function(.fun) {
+
+  fun_name <- dplyr::enquo(.fun) %>%
+    dplyr::quo_name(.)
+
+  acceptable_funs <- c("arfima", "Arima", "auto.arima", "ets", "baggedModel",
+                       "baggedETS", "bats", "tbats", "nnetar", "tslm")
+
+  if (!(fun_name %in% acceptable_funs)) {
+
+    message("YahooTickers currently only support functions from the forecast package.",
+            "\n",
+            "Please, change the argument ", crayon::cyan(".fun"), " to one of the options bellow:"
+            )
+
+    purrr::iwalk(
+      .x = acceptable_funs,
+      .f = ~ cat(.y, ":", .x, "\n")
+      )
+
+  }
+
+  stop()
+
+}
+
