@@ -7,7 +7,7 @@ hangseng_tickers <- YahooTickers:::get_hangseng()
 test_that("returns a tibble with one column and rows of lenght >= 50", {
 
   # message
-  expect_message(YahooTickers:::get_hangseng())
+  #expect_message(YahooTickers:::get_hangseng())
 
   # class
   expect_is(hangseng_tickers, "tbl")
@@ -19,5 +19,8 @@ test_that("returns a tibble with one column and rows of lenght >= 50", {
   # size
   expect_equal(hangseng_tickers %>% ncol(), 1L)
   expect_gte(hangseng_tickers %>% nrow(), 50)
+
+  # tickers length
+  expect_lte(purrr::map(hangseng_tickers, stringr::str_length)[[1]] %>% max(), 8)
 
 })

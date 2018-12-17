@@ -4,10 +4,10 @@ context("testing get_cac40()")
 
 cac40_tickers <- YahooTickers:::get_cac40()
 
-test_that("returns a tibble with one column and rows of lenght >= 40", {
+test_that("returns a tibble with one column and rows of lenght == 40", {
 
   # message
-  expect_message(YahooTickers:::get_cac40())
+  #expect_message(YahooTickers:::get_cac40())
 
   # class
   expect_is(cac40_tickers, "tbl")
@@ -18,7 +18,10 @@ test_that("returns a tibble with one column and rows of lenght >= 40", {
 
   # size
   expect_equal(cac40_tickers %>% ncol(), 1L)
-  expect_gte(cac40_tickers %>% nrow(), 40)
+  expect_equal(cac40_tickers %>% nrow(), 40L)
+
+  # tickers length
+  expect_lte(purrr::map(cac40_tickers, stringr::str_length)[[1]] %>% max(), 8)
 
 })
 

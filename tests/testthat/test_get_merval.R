@@ -17,4 +17,7 @@ test_that("returns a tibble with one column and rows of lenght >= 10", {
   expect_equal(merval_tickers %>% ncol(), 1L)
   expect_gte(merval_tickers %>% nrow(), 10)
 
+  # tickers length
+  expect_lte(purrr::map(merval_tickers, stringr::str_length)[[1]] %>% max(), 9)
+
 })

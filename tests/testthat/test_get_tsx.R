@@ -7,7 +7,7 @@ tsx_tickers <- YahooTickers:::get_tsx()
 test_that("returns a tibble with one column and rows of lenght >= 200", {
 
   # message
-  expect_message(YahooTickers:::get_tsx())
+  #expect_message(YahooTickers:::get_tsx())
 
   # class
   expect_is(tsx_tickers, "tbl")
@@ -19,5 +19,8 @@ test_that("returns a tibble with one column and rows of lenght >= 200", {
   # size
   expect_equal(tsx_tickers %>% ncol(), 1L)
   expect_gte(tsx_tickers %>% nrow(), 200)
+
+  # tickers length
+  expect_lte(purrr::map(tsx_tickers, stringr::str_length)[[1]] %>% max(), 10)
 
 })

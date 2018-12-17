@@ -1,38 +1,26 @@
 library(YahooTickers)
-library(dplyr)
 
 context("testing get_stocks()")
 
+merval_tickers <- get_tickers(merval)
+merval_stocks  <- get_stocks(merval_tickers, from = "2018-01-01", to = "2018-01-03", periodicity = "monthly")
 
-# data for the tests
-belgium_stocks <- get_tickers(bel20) %>%
-  slice(1:5) %>%
-  get_stocks(.)
+test_that("It returns a tibble with the correct dimensions", {
 
-dow_stocks <- get_tickers(dow) %>%
-  slice(1:2) %>%
-  get_stocks(., periodicity = "monthly", simplify = FALSE)
+  # class
+  expect_is(merval_stocks, "tbl")
 
+  # rows
+  expect_equal(nrow(merval_stocks), 11)
 
+  # cols
+  expect_equal(ncol(merval_stocks), 8)
 
-test_that("Contains the correct column names", {
+  # names
+  expect_equal(names(merval_stocks),
+               c("index", "tickers", "open", "high", "low", "close", "volume", "adjusted")
+               )
 
-  expect_equal(
-    colnames(belgium_stocks),
-    c("index", "tickers", "open", "high", "low", "close", "volume", "adjusted")
-    )
 
 })
-
-
-
-test_that("'Simplify' argument works as it should", {
-
-  expect_output(str(dow_stocks), "List of 2")
-
-})
-
-
-
-
 

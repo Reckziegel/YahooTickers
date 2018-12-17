@@ -7,7 +7,7 @@ nzx50_tickers <- YahooTickers:::get_nzx50()
 test_that("returns a tibble with one column and rows of lenght >= 49", {
 
   # message
-  expect_message(YahooTickers:::get_nzx50())
+  #expect_message(YahooTickers:::get_nzx50())
 
   # class
   expect_is(nzx50_tickers, "tbl")
@@ -19,5 +19,8 @@ test_that("returns a tibble with one column and rows of lenght >= 49", {
   # size
   expect_equal(nzx50_tickers %>% ncol(), 1L)
   expect_gte(nzx50_tickers %>% nrow(), 49)
+
+  # tickers length
+  expect_lte(purrr::map(nzx50_tickers, stringr::str_length)[[1]] %>% max(), 7)
 
 })

@@ -70,9 +70,10 @@ library(forecast)
 get_tickers(dow) \%>\%
   slice(1:3) \%>\%
   get_stocks(., periodicity = "monthly") \%>\%
-  get_returns(., tickers, arithmetic, TRUE, adjusted) \%>\%
-  get_models(., tickers, return_adjusted, 60, 1, FALSE, auto.arima,
-             seasonal = FALSE, stationary = TRUE)
+  get_returns(., tickers, arithmetic, TRUE, ret_adj = adjusted) \%>\%
+  get_models(., tickers, ret_adj, 60, 1, FALSE, auto.arima,
+             seasonal = FALSE, stationary = TRUE,
+             max.p = 1, max.q = 1)
 }
 \seealso{
 \href{https://business-science.github.io/sweep/reference/sw_tidy.html}{sw_tidy()}

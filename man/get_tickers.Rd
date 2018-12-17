@@ -54,7 +54,5 @@ get_tickers(ibovespa)
 get_tickers(sp500)
 
 # The exchange argument should be unquoted. This throws an error.
-\dontrun{
-get_tickers("sp500")
-}
+# get_tickers("sp500")
 }

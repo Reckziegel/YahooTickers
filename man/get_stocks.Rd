@@ -6,7 +6,7 @@
 \usage{
 get_stocks(tickers, from = "2010-01-01", to = Sys.Date(),
   periodicity = "daily", simplify = TRUE, otherwise = NULL,
-  quiet = FALSE)
+  quiet = TRUE)
 }
 \arguments{
 \item{tickers}{A character vector with the yahoo symbols.}
@@ -28,10 +28,10 @@ The defaul is TRUE.}
 
 \item{otherwise}{Argument passed to \code{purrr::safely}.}
 
-\item{quiet}{Argument passed to \code{purrr::safely}. A notification is showed whenever an error occurs.}
+\item{quiet}{Argument passed to \code{purrr::safely}. A notification is showed whenever an error occurs. Default is \code{TRUE}.}
 }
 \value{
-A tidy \code{tibble} if \code{simplify} is \code{TRUE} and a \code{list} of two components if \code{simplify} is \code{FALSE}.
+A tidy \code{tibble} if \code{simplify = TRUE} and a \code{list} of two components if \code{simplify = FALSE}.
 }
 \description{
 \code{get_stocks()} allows you to quickly download stock indexes from the the \href{https://finance.yahoo.com/}{Yahoo Finance} without having to run \code{for} loops.

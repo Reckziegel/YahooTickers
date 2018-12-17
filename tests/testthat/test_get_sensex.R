@@ -7,7 +7,7 @@ sensex_tickers <- YahooTickers:::get_sensex()
 test_that("returns a tibble with one column and rows of lenght >= 30", {
 
   # message
-  expect_message(YahooTickers:::get_sensex())
+  #expect_message(YahooTickers:::get_sensex())
 
   # class
   expect_is(sensex_tickers, "tbl")
@@ -19,5 +19,8 @@ test_that("returns a tibble with one column and rows of lenght >= 30", {
   # size
   expect_equal(sensex_tickers %>% ncol(), 1L)
   expect_gte(sensex_tickers %>% nrow(), 30)
+
+  # tickers length
+  expect_lte(purrr::map(sensex_tickers, stringr::str_length)[[1]] %>% max(), 10)
 
 })
