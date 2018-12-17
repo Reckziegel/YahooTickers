@@ -68,7 +68,7 @@ library(forecast)
 # Download and forecast time series using the "auto.arima" function
 # from the forecast package
 get_tickers(dow) \%>\%
-  slice(1:3) \%>\%
+  slice(1:2) \%>\%
   get_stocks(., periodicity = "monthly") \%>\%
   get_returns(., tickers, arithmetic, TRUE, ret_adj = adjusted) \%>\%
   get_models(., tickers, ret_adj, 60, 1, FALSE, auto.arima,
