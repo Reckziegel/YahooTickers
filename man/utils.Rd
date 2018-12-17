@@ -76,6 +76,9 @@ get_merval()
 
 validate_funs(.fun)
 }
+\arguments{
+\item{.fun}{A valid function from the forecast package.}
+}
 \description{
 A collection of utility functions
 }

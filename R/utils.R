@@ -571,10 +571,10 @@ get_merval <- function() {
 # Other Auxiliary Functions -----------------------------------------------
 
 #' @rdname utils
+#' @param .fun A valid function from the forecast package.
 validate_funs <- function(.fun) {
 
-  fun_name <- dplyr::enquo(.fun) %>%
-    dplyr::quo_name(.)
+  fun_name <- lazyeval::expr_text(.fun)
 
   acceptable_funs <- c("arfima", "Arima", "auto.arima", "ets", "baggedModel",
                        "baggedETS", "bats", "tbats", "nnetar", "tslm")
@@ -591,9 +591,9 @@ validate_funs <- function(.fun) {
       .f = ~ cat(.y, ":", .x, "\n")
       )
 
-  }
+    stop()
 
-  stop()
+  }
 
 }
 
