@@ -37,7 +37,7 @@ get_tickers(dow) \%>\%
   slice(1:2) \%>\%
   get_stocks(., periodicity = "monthly") \%>\%
   get_returns(., tickers, log, TRUE, adjusted) \%>\%
-  get_models(., tickers, return_adjusted, 100, 1, FALSE, auto.arima,
+  get_models(., tickers, adjusted, 100, 1, FALSE, auto.arima,
              seasonal = FALSE, stationary = TRUE) \%>\%
   get_forecasts(.)
 }

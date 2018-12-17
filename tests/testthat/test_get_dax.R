@@ -17,4 +17,7 @@ test_that("returns a tibble with one column and rows of lenght >= 30", {
   expect_equal(dax_tickers %>% ncol(), 1L)
   expect_gte(dax_tickers %>% nrow(), 30)
 
+  # tickers length
+  expect_lte(purrr::map(dax_tickers, stringr::str_length)[[1]] %>% max(), 8)
+
 })

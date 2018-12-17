@@ -17,4 +17,7 @@ test_that("returns a tibble with one column and rows of lenght == 20", {
   expect_equal(bel20_tickers %>% ncol(), 1L)
   expect_gte(bel20_tickers %>% nrow(), 20)
 
+  # tickers length
+  expect_lte(purrr::map(bel20_tickers, stringr::str_length)[[1]] %>% max(), 8)
+
 })

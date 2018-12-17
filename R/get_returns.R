@@ -116,7 +116,8 @@ get_returns.tbl_df <- function(.tbl, .group, .type, .omit_na = FALSE, ...) {
         .f = ~ .x %>%
           tidyr::replace_na(list(0)) %>%
           unlist()
-      )
+      ) %>%
+      dplyr::ungroup()
 
   }
 
@@ -183,7 +184,8 @@ get_returns.tbl_time <- function(.tbl, .group, .type, .omit_na = FALSE, ...) {
         .f = ~ .x %>%
           tidyr::replace_na(list(0)) %>%
           unlist()
-      )
+      ) %>%
+      dplyr::ungroup()
 
   }
 

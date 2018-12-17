@@ -7,7 +7,7 @@ bursa_tickers <- YahooTickers:::get_bursa()
 test_that("returns a tibble with one column and rows of lenght >= 30", {
 
   # message
-  expect_message(YahooTickers:::get_bursa())
+  #expect_message(YahooTickers:::get_bursa())
 
   # class
   expect_is(bursa_tickers, "tbl")
@@ -19,5 +19,8 @@ test_that("returns a tibble with one column and rows of lenght >= 30", {
   # size
   expect_equal(bursa_tickers %>% ncol(), 1L)
   expect_gte(bursa_tickers %>% nrow(), 30)
+
+  # tickers length
+  expect_lte(purrr::map(bursa_tickers, stringr::str_length)[[1]] %>% max(), 9)
 
 })

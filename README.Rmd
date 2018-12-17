@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -12,9 +12,16 @@ knitr::opts_chunk$set(
   warning = FALSE, 
   message = FALSE
 )
+
+library(YahooTickers)
+library(dplyr)
+
 ```
 
 # YahooTickers
+
+[![Travis build status](https://travis-ci.org/Reckziegel/YahooTickers.svg?branch=master)](https://travis-ci.org/Reckziegel/YahooTickers)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/Reckziegel/YahooTickers?branch=master&svg=true)](https://ci.appveyor.com/project/Reckziegel/YahooTickers)
 
 The goal of YahooTickers is to easily get stock index constituents from [Yahoo Finance](https://finance.yahoo.com/) without having to worry about complicated `for` loops. This may be useful if you wish to focus as quickly as possible in time-series *modeling*, but also convenient if data is needed for it's side effects (e.g. plotting).  
 
@@ -36,9 +43,6 @@ devtools::install_github("Reckziegel/YahooTickers")
 To download *all* the stock constituents of the Dow Jones Industrial Average use `get_tickers()` and `get_stocks()` in one pipeline.
 
 ```{r example1}
-library(YahooTickers)
-library(dplyr)
-
 get_tickers(dow) %>% 
   get_stocks(., periodicity = "monthly")
 ```
@@ -46,8 +50,6 @@ get_tickers(dow) %>%
 With additional functions provided in the package it's possible to fit a model in a rolling or expanding time window. This is done by `get_models()`.
 
 ```{r example2, warning=FALSE, error=FALSE}
-library(YahooTickers)
-library(dplyr)
 library(forecast)
 
 get_tickers(merval) %>%
@@ -61,12 +63,12 @@ get_tickers(merval) %>%
     .group   = tickers, 
     .type    = log, 
     .omit_na = TRUE, 
-    adjusted
+    ret_adj  = adjusted # change col names on the fly like dplyr!
     ) %>% 
   get_models(
     .tbl        = .,
     .group      = tickers, 
-    .col        = return_adjusted, 
+    .col        = ret_adj, 
     .initial    = 100, 
     .assess     = 1, 
     .cumulative = TRUE, 
@@ -74,13 +76,11 @@ get_tickers(merval) %>%
     ) 
 ```
 
-In this case, the the [ETS](http://pkg.robjhyndman.com/forecast/reference/ets.html) function was used to fit the first 100 observations on a expanding window, `cumulative = TRUE`. The output contains the fitted parameters, selection criterias, as some traditional in-sample error metrics. 
+In this case, the the [ETS](http://pkg.robjhyndman.com/forecast/reference/ets.html) function was used to fit the first 100 observations on a expanding window, `.cumulative = TRUE`. The output contains the fitted parameters, selection criterias, as some traditional in-sample error metrics. 
 
 To extract the true out-of-sample forecasts use `get_forecasts()`. This function automatically identifies the `.assess` argument in `get_models()` and uses it as a target for the forecast horizon. 
 
 ```{r example3, warning=FALSE, error=FALSE}
-library(YahooTickers)
-library(dplyr)
 library(forecast)
 
 get_tickers(merval) %>%
@@ -90,11 +90,11 @@ get_tickers(merval) %>%
     quiet       = TRUE
     ) %>% 
   get_returns(
-    .tbl     = ., 
-    .group   = tickers, 
-    .type    = log, 
-    .omit_na = TRUE, 
-    adjusted
+    .tbl            = ., 
+    .group          = tickers, 
+    .type           = log, 
+    .omit_na        = TRUE, 
+    return_adjusted = adjusted
     ) %>% 
   get_models(
     .tbl        = .,

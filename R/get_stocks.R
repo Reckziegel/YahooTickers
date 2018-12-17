@@ -16,9 +16,9 @@
 #' The defaul is TRUE.
 #'
 #' @param otherwise Argument passed to \code{purrr::safely}.
-#' @param quiet Argument passed to \code{purrr::safely}. A notification is showed whenever an error occurs.
+#' @param quiet Argument passed to \code{purrr::safely}. A notification is showed whenever an error occurs. Default is \code{TRUE}.
 #'
-#' @return A tidy \code{tibble} if \code{simplify} is \code{TRUE} and a \code{list} of two components if \code{simplify} is \code{FALSE}.
+#' @return A tidy \code{tibble} if \code{simplify = TRUE} and a \code{list} of two components if \code{simplify = FALSE}.
 #'
 #' @importFrom magrittr "%>%"
 #' @importFrom rlang .data
@@ -38,7 +38,7 @@ get_stocks <- function(tickers,
                        periodicity = "daily",
                        simplify    = TRUE,
                        otherwise   = NULL,
-                       quiet       = FALSE) {
+                       quiet       = TRUE) {
 
   # check inputs
   if (!purrr::is_vector(tickers)) {
@@ -130,6 +130,7 @@ get_stocks <- function(tickers,
       .data$volume,
       .data$adjusted
       ) %>%
+    dplyr::mutate_if(purrr::is_character, forcats::as_factor) %>%
     tibbletime::as_tbl_time(., index = "index")
 
   if (simplify) {
@@ -142,11 +143,7 @@ get_stocks <- function(tickers,
       dplyr::filter(!is.na(.data$error)) %>%
       dplyr::select(.data$error)
 
-    if (nrow(error_simple) != 0) {
-
-      error_simple <- error_simple
-
-    } else {
+    if (nrow(error_simple) == 0) {
 
       error_simple <- "No error found."
 

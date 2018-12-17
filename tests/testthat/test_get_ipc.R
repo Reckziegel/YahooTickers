@@ -7,7 +7,7 @@ ipc_tickers <- YahooTickers:::get_ipc()
 test_that("returns a tibble with one column and rows of lenght >= 30", {
 
   # message
-  expect_message(YahooTickers:::get_ipc())
+  #expect_message(YahooTickers:::get_ipc())
 
   # class
   expect_is(ipc_tickers, "tbl")
@@ -19,5 +19,8 @@ test_that("returns a tibble with one column and rows of lenght >= 30", {
   # size
   expect_equal(ipc_tickers %>% ncol(), 1L)
   expect_gte(ipc_tickers %>% nrow(), 30)
+
+  # tickers length
+  expect_lte(purrr::map(ipc_tickers, stringr::str_length)[[1]] %>% max(), 14)
 
 })

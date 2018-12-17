@@ -23,7 +23,7 @@ Imports:
     readxl (>= 1.1.0),
     rlang (>= 0.1.2),
     rvest (>= 0.3.2),
-    stringr (>= 1.3.1), 
+    stringr (>= 1.3.1),
     tibble (>= 1.4.2),
     tidyr (>= 0.8.2),
     timetk (>= 0.1.1.1),
@@ -35,4 +35,5 @@ Imports:
     lazyeval (>= 0.2.1),
     lubridate (>= 1.7.4),
     tibbletime (>= 0.1.1),
-    sweep (>= 0.2.1.1)
+    sweep (>= 0.2.1.1),
+    crayon

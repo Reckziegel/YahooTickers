@@ -17,4 +17,8 @@ test_that("returns a tibble with one column and rows of lenght >= 29", {
   expect_equal(ipsa_tickers %>% ncol(), 1L)
   expect_gte(ipsa_tickers %>% nrow(), 29)
 
+  # tickers length
+  expect_lte(purrr::map(ipsa_tickers, stringr::str_length)[[1]] %>% max(), 14)
+
+
 })

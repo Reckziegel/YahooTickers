@@ -25,7 +25,7 @@
 \alias{get_ipc}
 \alias{get_ipsa}
 \alias{get_merval}
-\title{A Collection of Utility Functions}
+\title{A collection of utility functions}
 \usage{
 get_sp500()
 
@@ -74,5 +74,5 @@ get_ipsa()
 get_merval()
 }
 \description{
-A Collection of Utility Functions
+A collection of utility functions
 }
