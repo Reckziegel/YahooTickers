@@ -25,6 +25,7 @@
 \alias{get_ipc}
 \alias{get_ipsa}
 \alias{get_merval}
+\alias{validate_funs}
 \title{A collection of utility functions}
 \usage{
 get_sp500()
@@ -72,6 +73,11 @@ get_ipc()
 get_ipsa()
 
 get_merval()
+
+validate_funs(.fun)
+}
+\arguments{
+\item{.fun}{A valid function from the forecast package.}
 }
 \description{
 A collection of utility functions
