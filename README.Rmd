@@ -43,8 +43,10 @@ devtools::install_github("Reckziegel/YahooTickers")
 To download *all* the stock constituents of the Dow Jones Industrial Average use `get_tickers()` and `get_stocks()` in one pipeline.
 
 ```{r example1}
-get_tickers(dow) %>% 
+dow <- get_tickers(dow) %>% 
   get_stocks(., periodicity = "monthly")
+
+dow 
 ```
 
 With additional functions provided in the package it's possible to fit a model in a rolling or expanding time window. This is done by `get_models()`.
@@ -52,7 +54,7 @@ With additional functions provided in the package it's possible to fit a model i
 ```{r example2, warning=FALSE, error=FALSE}
 library(forecast)
 
-get_tickers(merval) %>%
+merval_models <- get_tickers(merval) %>%
   get_stocks(
     tickers     = ., 
     periodicity = "monthly",
@@ -74,6 +76,9 @@ get_tickers(merval) %>%
     .cumulative = TRUE, 
     .fun        = ets
     ) 
+
+merval_models
+
 ```
 
 In this case, the the [ETS](http://pkg.robjhyndman.com/forecast/reference/ets.html) function was used to fit the first 100 observations on a expanding window, `.cumulative = TRUE`. The output contains the fitted parameters, selection criterias, as some traditional in-sample error metrics. 
@@ -83,28 +88,7 @@ To extract the true out-of-sample forecasts use `get_forecasts()`. This function
 ```{r example3, warning=FALSE, error=FALSE}
 library(forecast)
 
-get_tickers(merval) %>%
-  get_stocks(
-    tickers     = ., 
-    periodicity = "monthly",
-    quiet       = TRUE
-    ) %>% 
-  get_returns(
-    .tbl            = ., 
-    .group          = tickers, 
-    .type           = log, 
-    .omit_na        = TRUE, 
-    return_adjusted = adjusted
-    ) %>% 
-  get_models(
-    .tbl        = .,
-    .group      = tickers, 
-    .col        = return_adjusted, 
-    .initial    = 100, 
-    .assess     = 1, 
-    .cumulative = TRUE, 
-    .fun        = ets
-    )  %>% 
+merval_models  %>% 
   get_forecasts(.)
 
 ```
