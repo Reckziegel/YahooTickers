@@ -25,23 +25,25 @@ Examples
 To download *all* the stock constituents of the Dow Jones Industrial Average use `get_tickers()` and `get_stocks()` in one pipeline.
 
 ``` r
-get_tickers(dow) %>% 
+dow <- get_tickers(dow) %>% 
   get_stocks(., periodicity = "monthly")
-#> # A time tibble: 3,270 x 8
+
+dow 
+#> # A time tibble: 3,300 x 8
 #> # Index: index
 #>    index      tickers  open  high   low close    volume adjusted
 #>    <date>     <fct>   <dbl> <dbl> <dbl> <dbl>     <dbl>    <dbl>
-#>  1 2010-01-01 VZ       31.3  31.4  27.3  27.6 505361100     17.8
-#>  2 2010-02-01 VZ       28.0  28.0  26.6  27.1 348600600     17.8
-#>  3 2010-03-01 VZ       27.2  29.5  27.1  29.1 409463500     19.1
-#>  4 2010-04-01 VZ       29.3  29.7  26.8  27.1 503870600     17.8
-#>  5 2010-05-01 VZ       27.3  27.6  24.8  25.8 515564500     17.2
-#>  6 2010-06-01 VZ       25.6  27.6  25.4  26.3 447252100     17.5
-#>  7 2010-07-01 VZ       26.3  29.2  25.9  29.1 497527600     19.4
-#>  8 2010-08-01 VZ       29.5  30.4  29.1  29.5 381693500     20.0
-#>  9 2010-09-01 VZ       29.7  33.1  29.6  32.6 357902700     22.1
-#> 10 2010-10-01 VZ       32.8  33.7  31.8  32.5 423067300     22.0
-#> # ... with 3,260 more rows
+#>  1 2010-01-01 HD       29.2  29.2  27.2  28.0 305927400     22.7
+#>  2 2010-02-01 HD       28.0  31.5  27.5  31.2 358199600     25.3
+#>  3 2010-03-01 HD       31.2  33.0  31.1  32.3 311755400     26.2
+#>  4 2010-04-01 HD       32.4  37.0  32.2  35.2 371036400     28.8
+#>  5 2010-05-01 HD       35.4  36.3  32.1  33.9 522063700     27.7
+#>  6 2010-06-01 HD       33.4  34.2  28.0  28.1 445088000     22.9
+#>  7 2010-07-01 HD       28.4  29.4  26.6  28.5 375351500     23.4
+#>  8 2010-08-01 HD       28.8  29.2  27.1  27.8 279092800     22.9
+#>  9 2010-09-01 HD       28.1  32.2  28.1  31.7 235029100     26.3
+#> 10 2010-10-01 HD       31.8  32.1  30.2  30.9 248397600     25.6
+#> # ... with 3,290 more rows
 ```
 
 With additional functions provided in the package it's possible to fit a model in a rolling or expanding time window. This is done by `get_models()`.
@@ -49,7 +51,7 @@ With additional functions provided in the package it's possible to fit a model i
 ``` r
 library(forecast)
 
-get_tickers(merval) %>%
+merval_models <- get_tickers(merval) %>%
   get_stocks(
     tickers     = ., 
     periodicity = "monthly",
@@ -71,21 +73,23 @@ get_tickers(merval) %>%
     .cumulative = TRUE, 
     .fun        = ets
     ) 
-#> # A time tibble: 176 x 16
+
+merval_models
+#> # A time tibble: 198 x 16
 #> # Index: index
 #>    index      tickers term  estimate model.desc sigma logLik   AIC   BIC
 #>    <date>     <fct>   <fct>    <dbl> <fct>      <dbl>  <dbl> <dbl> <dbl>
-#>  1 2018-06-01 TECO2.~ alpha 0.000100 ETS(A,N,N) 0.108  -7.01  20.0  27.8
-#>  2 2018-06-01 TECO2.~ l     0.0247   ETS(A,N,N) 0.108  -7.01  20.0  27.8
-#>  3 2018-07-01 TECO2.~ alpha 0.000100 ETS(A,N,N) 0.108  -7.45  20.9  28.7
-#>  4 2018-07-01 TECO2.~ l     0.0238   ETS(A,N,N) 0.108  -7.45  20.9  28.7
-#>  5 2018-08-01 TECO2.~ alpha 0.000100 ETS(A,N,N) 0.108  -7.64  21.3  29.2
-#>  6 2018-08-01 TECO2.~ l     0.0243   ETS(A,N,N) 0.108  -7.64  21.3  29.2
-#>  7 2018-09-01 TECO2.~ alpha 0.000100 ETS(A,N,N) 0.108  -8.12  22.2  30.1
-#>  8 2018-09-01 TECO2.~ l     0.0253   ETS(A,N,N) 0.108  -8.12  22.2  30.1
-#>  9 2018-10-01 TECO2.~ alpha 0.000100 ETS(A,N,N) 0.108  -8.79  23.6  31.5
-#> 10 2018-10-01 TECO2.~ l     0.0264   ETS(A,N,N) 0.108  -8.79  23.6  31.5
-#> # ... with 166 more rows, and 7 more variables: ME <dbl>, RMSE <dbl>,
+#>  1 2018-06-01 TS.BA   alpha 0.000100 ETS(A,N,N) 0.109  -7.34  20.7  28.5
+#>  2 2018-06-01 TS.BA   l     0.0170   ETS(A,N,N) 0.109  -7.34  20.7  28.5
+#>  3 2018-07-01 TS.BA   alpha 0.000100 ETS(A,N,N) 0.109  -8.13  22.3  30.1
+#>  4 2018-07-01 TS.BA   l     0.0183   ETS(A,N,N) 0.109  -8.13  22.3  30.1
+#>  5 2018-08-01 TS.BA   alpha 0.000100 ETS(A,N,N) 0.109  -8.33  22.7  30.5
+#>  6 2018-08-01 TS.BA   l     0.0178   ETS(A,N,N) 0.109  -8.33  22.7  30.5
+#>  7 2018-09-01 TS.BA   alpha 0.000100 ETS(A,N,N) 0.110 -10.0   26.1  34.0
+#>  8 2018-09-01 TS.BA   l     0.0197   ETS(A,N,N) 0.110 -10.0   26.1  34.0
+#>  9 2018-10-01 TS.BA   alpha 0.000100 ETS(A,N,N) 0.109 -10.5   26.9  34.8
+#> 10 2018-10-01 TS.BA   l     0.0205   ETS(A,N,N) 0.109 -10.5   26.9  34.8
+#> # ... with 188 more rows, and 7 more variables: ME <dbl>, RMSE <dbl>,
 #> #   MAE <dbl>, MPE <dbl>, MAPE <dbl>, MASE <dbl>, ACF1 <dbl>
 ```
 
@@ -96,44 +100,23 @@ To extract the true out-of-sample forecasts use `get_forecasts()`. This function
 ``` r
 library(forecast)
 
-get_tickers(merval) %>%
-  get_stocks(
-    tickers     = ., 
-    periodicity = "monthly",
-    quiet       = TRUE
-    ) %>% 
-  get_returns(
-    .tbl            = ., 
-    .group          = tickers, 
-    .type           = log, 
-    .omit_na        = TRUE, 
-    return_adjusted = adjusted
-    ) %>% 
-  get_models(
-    .tbl        = .,
-    .group      = tickers, 
-    .col        = return_adjusted, 
-    .initial    = 100, 
-    .assess     = 1, 
-    .cumulative = TRUE, 
-    .fun        = ets
-    )  %>% 
+merval_models  %>% 
   get_forecasts(.)
-#> # A time tibble: 88 x 8
+#> # A time tibble: 99 x 8
 #> # Index: index
-#>    index      tickers return_adjusted mean_forecast  lo.80  lo.95 hi.80
-#>    <date>     <fct>             <dbl>         <dbl>  <dbl>  <dbl> <dbl>
-#>  1 2018-06-01 TECO2.~         -0.0669       0.0247  -0.114 -0.188 0.164
-#>  2 2018-07-01 TECO2.~          0.0765       0.0238  -0.115 -0.188 0.162
-#>  3 2018-08-01 TECO2.~          0.121        0.0243  -0.114 -0.187 0.162
-#>  4 2018-09-01 TECO2.~          0.142        0.0253  -0.113 -0.186 0.163
-#>  5 2018-10-01 TECO2.~         -0.102        0.0264  -0.112 -0.185 0.164
-#>  6 2018-11-01 TECO2.~          0            0.0252  -0.113 -0.186 0.164
-#>  7 2018-12-01 TECO2.~         -0.0461       0.0249  -0.113 -0.186 0.163
-#>  8 2018-12-14 TECO2.~          0            0.0243  -0.113 -0.186 0.162
-#>  9 2018-06-01 APBR.BA         -0.0385       0.00661 -0.196 -0.303 0.209
-#> 10 2018-07-01 APBR.BA          0.103        0.00615 -0.195 -0.302 0.207
-#> # ... with 78 more rows, and 1 more variable: hi.95 <dbl>
+#>    index      tickers ret_adj mean_forecast  lo.80  lo.95 hi.80 hi.95
+#>    <date>     <fct>     <dbl>         <dbl>  <dbl>  <dbl> <dbl> <dbl>
+#>  1 2018-06-01 TS.BA    0.147         0.0170 -0.122 -0.196 0.156 0.230
+#>  2 2018-07-01 TS.BA   -0.0332        0.0183 -0.121 -0.195 0.158 0.232
+#>  3 2018-08-01 TS.BA    0.213         0.0178 -0.121 -0.195 0.157 0.230
+#>  4 2018-09-01 TS.BA    0.108         0.0197 -0.121 -0.195 0.160 0.235
+#>  5 2018-10-01 TS.BA   -0.277         0.0205 -0.120 -0.194 0.161 0.235
+#>  6 2018-11-01 TS.BA   -0.128         0.0177 -0.127 -0.203 0.162 0.239
+#>  7 2018-12-01 TS.BA   -0.123         0.0173 -0.128 -0.204 0.162 0.239
+#>  8 2019-01-01 TS.BA    0.126         0.0150 -0.130 -0.207 0.160 0.237
+#>  9 2019-02-01 TS.BA    0.125         0.0160 -0.129 -0.206 0.161 0.238
+#> 10 2018-06-01 COME.BA -0.195         0.0256 -0.150 -0.243 0.201 0.294
+#> # ... with 89 more rows
 ```
 
 Currently, `YahooTickers` supports the following stock indexes:
