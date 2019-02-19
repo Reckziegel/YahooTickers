@@ -21,8 +21,10 @@ get_sp500 <- function() {
     )
 
   # rvest functions: Get table of stocks
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_node(css = "table") %>%
     rvest::html_table(., fill = TRUE) %>%
     tibble::set_tidy_names() %>%
@@ -38,8 +40,10 @@ get_dow <- function() {
 
   path <- "https://finance.yahoo.com/quote/%5EDJI/components?p=%5EDJI"
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_node(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -87,8 +91,10 @@ get_nyse <- function() {
 
   map_paths <- function(paths) {
 
-    paths %>%
-      xml2::read_html() %>%
+    insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
+    path %>%
+      insistently_read_html() %>%
       rvest::html_nodes(css = "table") %>%
       rvest::html_table() %>%
       .[[5]] %>%
@@ -118,8 +124,10 @@ get_amex <- function() {
 
   map_paths <- function(paths) {
 
-    paths %>%
-      xml2::read_html() %>%
+    insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
+    path %>%
+      insistently_read_html() %>%
       rvest::html_nodes(css = "table") %>%
       rvest::html_table() %>%
       .[[4]] %>%
@@ -150,8 +158,10 @@ get_russell2000 <- function() {
 
   map_paths <- function(paths) {
 
-    paths %>%
-      xml2::read_html() %>%
+    insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
+    path %>%
+      insistently_read_html() %>%
       rvest::html_nodes(css = "table") %>%
       rvest::html_table() %>%
       .[[4]] %>%
@@ -182,8 +192,10 @@ get_ftse100 <- function() {
 
   map_paths <- function(paths) {
 
-    paths %>%
-      xml2::read_html() %>%
+    insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
+    path %>%
+      insistently_read_html() %>%
       rvest::html_nodes(css = "table") %>%
       rvest::html_table() %>%
       data.frame() %>%
@@ -207,8 +219,10 @@ get_dax <- function() {
 
   path <- "https://finance.yahoo.com/quote/%5EGDAXI/components?p=%5EGDAXI"
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -230,8 +244,10 @@ get_cac40 <- function() {
     "."
     )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -247,8 +263,10 @@ get_bel20 <- function() {
 
   path <- "https://finance.yahoo.com/quote/%5EBFX/components?p=%5EBFX"
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -270,7 +288,10 @@ get_topix <- function() {
 
   url <- "https://www.jpx.co.jp/english/markets/indices/topix/tvdivq00000030ne-att/TOPIX_weight_en.xlsx"
   destfile <- "TOPIX_weight_en.xlsx"
-  curl::curl_download(url, destfile)
+
+  insistently_curl_download <- purrr::insistently(f = curl::curl_download)
+
+  insistently_curl_download(url, destfile)
 
   suppressWarnings(readxl::read_excel(destfile)) %>%
     dplyr::filter(.data$`New Index Series Code` == "TOPIX Core30") %>%
@@ -293,8 +314,10 @@ get_hangseng <- function() {
     "."
     )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -316,8 +339,10 @@ get_sensex <- function() {
     "."
     )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -340,8 +365,10 @@ get_jakarta <- function() {
     "."
   )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -364,13 +391,15 @@ get_bursa <- function() {
     "."
     )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = .data$`Ticker..in.Yahoo.Finance.`) %>%
+    dplyr::rename(tickers = .data$Ticker) %>%
     stats::na.omit() %>%
     dplyr::select(.data$tickers)
 
@@ -388,8 +417,10 @@ get_nzx50 <- function() {
     "."
   )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -412,8 +443,10 @@ get_kospi <- function() {
     "."
   )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -436,8 +469,10 @@ get_taiex  <- function() {
     "."
     )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -460,8 +495,10 @@ get_tsx  <- function() {
     "."
     )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -483,8 +520,10 @@ get_ibov  <- function() {
     "."
   )
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -509,7 +548,9 @@ get_ipc  <- function() {
 
   destfile <- "ipc.xls"
 
-  curl::curl_download(url, destfile)
+  insistently_curl_download <- purrr::insistently(f = curl::curl_download)
+
+  insistently_curl_download(url, destfile)
 
   ipc_tbl <- suppressWarnings(
 
@@ -539,8 +580,10 @@ get_ipsa <- function() {
 
   path <- "https://finance.yahoo.com/quote/%5EIPSA/components?p=%5EIPSA"
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -556,8 +599,10 @@ get_merval <- function() {
 
   path <- "https://finance.yahoo.com/quote/%5EMERV/components?p=%5EMERV"
 
+  insistently_read_html <- purrr::insistently(f = xml2::read_html)
+
   path %>%
-    xml2::read_html() %>%
+    insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
@@ -596,4 +641,5 @@ validate_funs <- function(.fun) {
   }
 
 }
+
 
