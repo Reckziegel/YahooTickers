@@ -3,17 +3,14 @@
 \name{get_forecasts}
 \alias{get_forecasts}
 \alias{get_forecasts.default}
-\alias{get_forecasts.tbl}
-\alias{get_forecast.tbl_time}
+\alias{get_forecasts.tbl_df}
 \title{True Out-of-Sample Time Series Forecasting}
 \usage{
 get_forecasts(.tbl, ...)
 
 \method{get_forecasts}{default}(.tbl, ...)
 
-\method{get_forecasts}{tbl}(.tbl, ...)
-
-get_forecast.tbl_time(.tbl, ...)
+\method{get_forecasts}{tbl_df}(.tbl, ...)
 }
 \arguments{
 \item{.tbl}{A tidy \code{tibble} of the \code{tbl_time} class.}

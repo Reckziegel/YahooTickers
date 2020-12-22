@@ -77,38 +77,38 @@ get_models.default <- function(.tbl, .group, .col, .initial, .assess, .cumulativ
 get_models.tbl_df <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...) {
 
 
-  # stop if ".fun" is not in the forecast package
+  # stop if `.fun` is not in the forecast package
   validate_funs(.fun)
 
   # coerce to tbl_time
-  if (!("tbl_time" %in% class(.tbl))) {
-
-    # find index name
-    .index_name <- .tbl %>%
-      dplyr::select_if(., .predicate = lubridate::is.Date) %>%
-      names() %>%
-      dplyr::sym(.)
-
-    # coerce
-    .tbl <- .tbl %>%
-      tibbletime::as_tbl_time(., index = !!.index_name)
-
-  }
+  # if (!("tbl_time" %in% class(.tbl))) {
+  #
+  #   # find index name
+  #   .index_name <- .tbl %>%
+  #     dplyr::select_if(., .predicate = lubridate::is.Date) %>%
+  #     names() %>%
+  #     dplyr::sym(.)
+  #
+  #   # coerce
+  #   .tbl <- .tbl %>%
+  #     tibbletime::as_tbl_time(., index = !!.index_name)
+  #
+  # }
 
 
   #tidy eval
   .group_expr <- dplyr::enquo(.group)
   .col_expr   <- dplyr::enquo(.col)
   .col_name   <- dplyr::quo_name(.col_expr)
-  .index_expr <- tibbletime::get_index_quo(.tbl)
-  .index_name <- tibbletime::get_index_char(.tbl)
+  #.index_expr <- get_index_quo(.tbl)
+  .index_name <- get_index_char(.tbl)
   .dots_expr  <- dplyr::enquos(...)
   .fun_mapper <- purrr::as_mapper(.fun)
 
   # manipulate
   .tbl <- .tbl %>%
     dplyr::group_by(!!.group_expr) %>%
-    tidyr::nest(!!.index_expr, !!.col_expr) %>%
+    tidyr::nest(data = c(!!.index_name, !!.col_expr)) %>% #TODO verify if my get_index_col works here
     dplyr::mutate(samples = purrr::map(
       .x = .data$data,
       .f = ~ rsample::rolling_origin(., initial = .initial, assess = .assess, cumulative = .cumulative)
@@ -119,21 +119,51 @@ get_models.tbl_df <- function(.tbl, .group, .col, .initial, .assess, .cumulative
       analysis_tbl   = purrr::map(.x = .data$splits,
                                   .f = ~ rsample::analysis(.x)),
       analysis_xts   = purrr::map(.x = .data$analysis_tbl,
-                                  .f = ~ timetk::tk_xts(., select = !!.col_name, silent = TRUE)),
+                                  .f = ~ timetk::tk_xts(., silent = TRUE)), # FIXME
       assessment_tbl = purrr::map(.x = .data$splits,
                                   .f = ~ rsample::assessment(.x)),
       models         = purrr::map(.x = .data$analysis_xts,
                                   .f = ~ .fun_mapper(., !!!.dots_expr)),
       !!.index_name  := purrr::map(.x = .data$assessment_tbl,
-                                   .f = ~ min(tibbletime::get_index_col(.))),
+                                   .f = ~ get_index_col(.) %>% dplyr::pull(.) %>% min(.)),
       !!.col_name    := purrr::map_dbl(.x = .data$assessment_tbl,
                                        .f = ~ dplyr::last(.[[!!.col_name]])),
-      tidy_col       = purrr::map(.x = .data$models, .f = sweep::sw_tidy),
-      glance_col     = purrr::map(.x = .data$models, .f = sweep::sw_glance)
-    ) %>%
-    tidyr::unnest(.data[[!!.index_name]]) %>%
-    tidyr::unnest(.data$tidy_col, .drop = FALSE) %>%
-    tidyr::unnest(.data$glance_col, .drop = FALSE) %>%
+      tidy_col        = purrr::map(.x = .data$models, .f = sweep::sw_tidy),
+      glance_col      = purrr::map(.x = .data$models, .f = sweep::sw_glance)
+    )
+
+  # if `tidy_col` or `glance_col` have NA's the unnest function bugs.
+
+  #.tbl %>% tidyr::unnest_wider(col = .data$tidy_col)
+    # dplyr::mutate(
+    #   tidy_col = purrr::map(.x = .data$tidy_col, .f = clean_bad_model_output))
+
+                            #
+                            # .f = ~ purrr::modify_if(
+                            #   .x = .x,
+                            #   .p = ~ NA %in% .x,
+                            #   .f = ~ tidyr::replace_na(
+                            #     data    = .x,
+                            #     replace = list(NA_character_)) %>% unlist())))
+
+    #   glance_col = purrr::map(.x = .data$glance_col,
+    #                           .f = ~ purrr::modify_if(
+    #                             .x = .x,
+    #                             .p = purrr::map_lgl(.x = ., .f = ~ NA %in% .x),
+    #                             .f = ~ .x %>%
+    #                               tidyr::replace_na(list(0)r) %>%
+    #                               unlist()
+    #                             )
+    #                           )
+    # )
+
+  .tbl <- .tbl %>%
+    dplyr::group_by(.data[[!!dplyr::quo_name(.group_expr)]]) %>%
+    tidyr::unnest(cols = .data[[!!.index_name]]) %>%
+    tidyr::unnest(cols = .data$tidy_col) %>%
+    tidyr::unnest(cols = .data$glance_col) %>%
+    dplyr::ungroup() %>%
+
     dplyr::mutate_if(., .predicate = purrr::is_character, .funs = forcats::as_factor)
 
 
@@ -146,11 +176,11 @@ get_models.tbl_df <- function(.tbl, .group, .col, .initial, .assess, .cumulative
 
   # make it clean and print
   .tbl <- .tbl %>%
-    dplyr::select(!!.index_expr, !!.group_expr, dplyr::everything(), -!!.col_expr, -c(.data$splits:.data$models))
+    dplyr::select(!!.index_name, !!.group_expr, dplyr::everything(), -!!.col_expr, -c(.data$splits:.data$models))
 
 
   # return
-  return(.tbl)
+  tibble::new_tibble(x = .tbl, nrow = nrow(.tbl), class = 'YahooTickers', .attr_tbl = .attr_tbl)
 
 
 }
@@ -159,69 +189,76 @@ get_models.tbl_df <- function(.tbl, .group, .col, .initial, .assess, .cumulative
 
 # Method for tlb_time -----------------------------------------------------
 
-#' @rdname get_models
-#' @export
-get_models.tbl_time <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...) {
-
-
-  # stop if ".fun" is not in the forecast package
-  validate_funs(.fun)
-
-  #tidy eval
-  .group_expr <- dplyr::enquo(.group)
-  .col_expr   <- dplyr::enquo(.col)
-  .col_name   <- dplyr::quo_name(.col_expr)
-  .index_expr <- tibbletime::get_index_quo(.tbl)
-  .index_name <- tibbletime::get_index_char(.tbl)
-  .dots_expr  <- dplyr::enquos(...)
-  .fun_mapper <- purrr::as_mapper(.fun)
-
-  # manipulate
-  .tbl <- .tbl %>%
-    dplyr::group_by(!!.group_expr) %>%
-    tidyr::nest(!!.index_expr, !!.col_expr) %>%
-    dplyr::mutate(samples = purrr::map(
-      .x = .data$data,
-      .f = ~ rsample::rolling_origin(., initial = .initial, assess = .assess, cumulative = .cumulative)
-      )
-    ) %>%
-    tidyr::unnest(.data$samples) %>%
-    dplyr::mutate(
-      analysis_tbl   = purrr::map(.x = .data$splits,
-                                  .f = ~ rsample::analysis(.x)),
-      analysis_xts   = purrr::map(.x = .data$analysis_tbl,
-                                  .f = ~ timetk::tk_xts(., select = !!.col_name, silent = TRUE)),
-      assessment_tbl = purrr::map(.x = .data$splits,
-                                  .f = ~ rsample::assessment(.x)),
-      models         = purrr::map(.x = .data$analysis_xts,
-                                  .f = ~ .fun_mapper(., !!!.dots_expr)),
-      !!.index_name  := purrr::map(.x = .data$assessment_tbl,
-                                   .f = ~ min(tibbletime::get_index_col(.))),
-      !!.col_name    := purrr::map_dbl(.x = .data$assessment_tbl,
-                                       .f = ~ dplyr::last(.[[!!.col_name]])),
-      tidy_col       = purrr::map(.x = .data$models, .f = sweep::sw_tidy),
-      glance_col     = purrr::map(.x = .data$models, .f = sweep::sw_glance)
-    ) %>%
-    tidyr::unnest(.data[[!!.index_name]]) %>%
-    tidyr::unnest(.data$tidy_col, .drop = FALSE) %>%
-    tidyr::unnest(.data$glance_col, .drop = FALSE) %>%
-    dplyr::mutate_if(., .predicate = purrr::is_character, .funs = forcats::as_factor)
-
-
-  # save attributes for forecasting
-  .attr_tbl <- .tbl %>%
-    dplyr::select(.data$splits:.data$models, !!.group_expr)
-
-  attr(.tbl, "get_models") <- list(h = .assess, attr_tbl = .attr_tbl, .group_col = .group_expr)
-
-
-  # make it clean and print
-  .tbl <- .tbl %>%
-    dplyr::select(!!.index_expr, !!.group_expr, dplyr::everything(), -!!.col_expr, -c(.data$splits:.data$models))
-
-
-  # return
-  return(.tbl)
-
-}
+# @rdname get_models
+# @export
+# get_models.tbl_time <- function(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...) {
+#
+#
+#   # stop if ".fun" is not in the forecast package
+#   validate_funs(.fun)
+#
+#   #tidy eval
+#   .group_expr <- dplyr::enquo(.group)
+#   .col_expr   <- dplyr::enquo(.col)
+#   .col_name   <- dplyr::quo_name(.col_expr)
+#   .index_expr <- get_index_quo(.tbl)
+#   .index_name <- get_index_char(.tbl)
+#   .dots_expr  <- dplyr::enquos(...)
+#   .fun_mapper <- purrr::as_mapper(.fun)
+#
+#   # manipulate
+#   .tbl <- .tbl %>%
+#     dplyr::group_by(!!.group_expr) %>%
+#     tidyr::nest(data = c(!!.index_name, !!.col_expr)) %>%
+#     dplyr::mutate(samples = purrr::map(
+#       .x = .data$data,
+#       .f = ~ rsample::rolling_origin(., initial = .initial, assess = .assess, cumulative = .cumulative)
+#       )
+#     ) %>%
+#     tidyr::unnest(.data$samples) %>%
+#     dplyr::mutate(
+#       analysis_tbl   = purrr::map(.x = .data$splits,
+#                                   .f = ~ rsample::analysis(.x)),
+#       analysis_xts   = purrr::map(.x = .data$analysis_tbl,
+#                                   .f = ~ timetk::tk_xts(., select = !!.col_name, silent = TRUE)),
+#       assessment_tbl = purrr::map(.x = .data$splits,
+#                                   .f = ~ rsample::assessment(.x)),
+#       models         = purrr::map(.x = .data$analysis_xts,
+#                                   .f = ~ .fun_mapper(., !!!.dots_expr)),
+#       !!.index_name  := purrr::map(.x = .data$assessment_tbl,
+#                                    .f = ~ get_index_col(.) %>% dplyr::pull(.) %>% min(.)),
+#       !!.col_name    := purrr::map_dbl(.x = .data$assessment_tbl,
+#                                        .f = ~ dplyr::last(.[[!!.col_name]])),
+#       tidy_col       = purrr::map(.x = .data$models, .f = sweep::sw_tidy),
+#       glance_col     = purrr::map(.x = .data$models, .f = sweep::sw_glance)
+#     ) %>%
+#
+#     # FIXME if one of the cols {tidy_col} or {glance_col} has NA in the params,
+#     # the unnest function does not work
+#
+#     dplyr::group_by(.data[[!!dplyr::quo_name(.group_expr)]]) %>%
+#     tidyr::unnest(cols = .data[[!!.index_name]]) %>%
+#     tidyr::unnest(cols = .data$tidy_col) %>%
+#     tidyr::unnest(cols = .data$glance_col) %>%
+#     dplyr::ungroup() %>%
+#
+#     dplyr::mutate_if(., .predicate = purrr::is_character, .funs = forcats::as_factor)
+#
+#
+#   # save attributes for forecasting
+#   .attr_tbl <- .tbl %>%
+#     dplyr::select(.data$splits:.data$models, !!.group_expr)
+#
+#   attr(.tbl, "get_models") <- list(h = .assess, attr_tbl = .attr_tbl, .group_col = .group_expr)
+#
+#
+#   # make it clean and print
+#   .tbl <- .tbl %>%
+#     dplyr::select(!!.index_name, !!.group_expr, dplyr::everything(), -!!.col_expr, -c(.data$splits:.data$models))
+#
+#
+#   # return
+#   tibble::new_tibble(x = .tbl, nrow = nrow(.tbl), class = 'YahooTickers', .attr_tbl = .attr_tbl)
+#
+# }
 

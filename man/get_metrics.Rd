@@ -4,7 +4,7 @@
 \alias{get_metrics}
 \title{Summarise Forecasting Models Errror Metrics}
 \usage{
-get_metrics(.tbl, .group, .truth, .forecast, ...)
+get_metrics(.tbl, .group, .truth, .forecast)
 }
 \arguments{
 \item{.tbl}{A \code{tibble} of the \code{tbl_time} class.}
@@ -14,8 +14,6 @@ get_metrics(.tbl, .group, .truth, .forecast, ...)
 \item{.truth}{The truth results of a time series realization.}
 
 \item{.forecast}{The out-of-sample forecasts from the chosen model.}
-
-\item{...}{Additional parameters to be passed to \code{group_by()}. Read the details.}
 }
 \value{
 A \code{tibble} with the following summary statistics by asset: mse, rmse, mae, mape and mase.
@@ -32,23 +30,23 @@ Summarise the out-of-sample stocks forecasts by asset and time periods.
                        is a number like 1 or 2, and period is an interval like weekly
                        or yearly. There must be a space between the two.
 
-Note that you can pass the specification in a flexible way:
+                       Note that you can pass the specification in a flexible way:
 
-* 1 Year: `'1 year'` / `'1 Y'` / `'1 yearly'` / `'yearly'`
+                       * 1 Year: `'1 year'` / `'1 Y'` / `'1 yearly'` / `'yearly'`
 
-This shorthand is available for year, quarter, month, day, hour, minute,
+                       This shorthand is available for year, quarter, month, day, hour, minute,
                        second, millisecond and microsecond periodicities. Additionally,
                        you have the option of passing in a vector of dates to use as custom
                        and more flexible boundaries.
 
-\item \code{start_date}: Optional argument used to specify the start date for the
+ \item \code{start_date}: Optional argument used to specify the start date for the
                           first group. The default is to start at the closest period
                           boundary below the minimum date in the supplied index.
 
-\item \code{side}: Whether to return the date at the beginning or the end of the new period.
+ \item \code{side}: Whether to return the date at the beginning or the end of the new period.
                     By default, the "end" of the period. Use "start" to change to the start of the period.
 
-\item \code{clean}: Whether or not to round the collapsed index up / down to the next period boundary.
+ \item \code{clean}: Whether or not to round the collapsed index up / down to the next period boundary.
                      The decision to round up / down is controlled by the side argument.
 
 }
@@ -59,14 +57,11 @@ library(dplyr)
 library(forecast)
 
 get_tickers(dow) \%>\%
-  slice(1:5) \%>\%
+  slice(1:2) \%>\%
   get_stocks(., periodicity = "monthly") \%>\%
   get_returns(., tickers, log, TRUE, adjusted) \%>\%
   get_models(., tickers, adjusted, 100, 1, FALSE, auto.arima,
              seasonal = FALSE, stationary = TRUE) \%>\%
   get_forecasts(.) \%>\%
-  get_metrics(., tickers, adjusted, mean_forecast)
-}
-\seealso{
-\href{https://business-science.github.io/tibbletime/reference/collapse_by.html}{collapse_by()}
+  get_metrics(., tickers, adjusted, point_forecast)
 }

@@ -18,7 +18,7 @@ test_that("returns a tibble with one column and rows of lenght >= 50", {
 
   # size
   expect_equal(hangseng_tickers %>% ncol(), 1L)
-  expect_gte(hangseng_tickers %>% nrow(), 50)
+  expect_gte(hangseng_tickers %>% nrow(), 30L)
 
   # tickers length
   expect_lte(purrr::map(hangseng_tickers, stringr::str_length)[[1]] %>% max(), 8)

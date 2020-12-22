@@ -4,7 +4,6 @@
 \alias{get_returns}
 \alias{get_returns.default}
 \alias{get_returns.tbl_df}
-\alias{get_returns.tbl_time}
 \title{Calculate Returns From Stock Prices}
 \usage{
 get_returns(.tbl, .group, .type, .omit_na = FALSE, ...)
@@ -12,14 +11,12 @@ get_returns(.tbl, .group, .type, .omit_na = FALSE, ...)
 \method{get_returns}{default}(.tbl, .group, .type, .omit_na = FALSE, ...)
 
 \method{get_returns}{tbl_df}(.tbl, .group, .type, .omit_na = FALSE, ...)
-
-\method{get_returns}{tbl_time}(.tbl, .group, .type, .omit_na = FALSE,
-  ...)
 }
 \arguments{
 \item{.tbl}{A tidy \code{tibble}.}
 
-\item{.group}{The column in which the data should be grouped. This will often be a column with stock tickers or stocks names.}
+\item{.group}{The column in which the data should be grouped. This will often
+be a column with stock tickers or stocks names.}
 
 \item{.type}{The method used to calculate returns. One of:
 
@@ -30,13 +27,14 @@ get_returns(.tbl, .group, .type, .omit_na = FALSE, ...)
 
 \item{.omit_na}{Should NA values be omitted? Default is \code{FALSE} (NA's are replaced by \code{0}).}
 
-\item{...}{The column (or columns) in which the calculation shoud be conducted.}
+\item{...}{The column (or columns) in which the calculation should be conducted.}
 }
 \value{
 A tidy \code{tibble}.
 }
 \description{
-Stock prices are known for been non-stationary. Use \code{get_returns()} as a preprocessing step for econometric modeling.
+Stock prices are known for been non-stationary. Use \code{get_returns()} as a
+preprocessing step for econometric modeling.
 }
 \examples{
 library(YahooTickers)

@@ -53,148 +53,147 @@ get_forecasts.default <- function(.tbl, ...) {
 
 #' @rdname get_forecasts
 #' @export
-get_forecasts.tbl <- function(.tbl, ...) {
+get_forecasts.tbl_df <- function(.tbl, ...) {
 
-  if (!("get_models" %in% names(attributes(.tbl)))) {
-    rlang::abort("The .tbl argument must be an object returned from get_models().")
-  }
+  if (inherits(.tbl, 'YahooTickers')) {
 
-  # tidy eval
-  .dots_expr <- dplyr::enquos(...)
+    if (!("get_models" %in% names(attributes(.tbl)))) {
+      rlang::abort("The .tbl argument must be an object returned from get_models().")
+    }
 
-  # coerce to tbl_time
-  if (!("tbl_time" %in% class(.tbl))) {
+    # tidy eval
+    .dots_expr <- dplyr::enquos(...)
 
     # find index name
     .index_name <- .tbl %>%
       dplyr::select_if(., .predicate = lubridate::is.Date) %>%
       names() %>%
-      dplyr::sym(.)
-
-    # coerce
-    .tbl <- .tbl %>%
-      tibbletime::as_tbl_time(., index = !!.index_name)
-
-  }
+      dplyr::sym()
 
 
-  # verify if the forecasting horizon is identical to .assess argument in get_models()
-  if (!(purrr::is_empty(.dots_expr$h))) {
+    # verify if the forecasting horizon is identical to .assess argument in get_models()
+    if (!(purrr::is_empty(.dots_expr$h))) {
 
-    # if not coerce
-    if (rlang::eval_tidy(.dots_expr$h) != attributes(.tbl)$get_models[["h"]]) {
+      # if not coerce
+      if (rlang::eval_tidy(.dots_expr$h) != attributes(.tbl)$get_models[["h"]]) {
 
-      warning("The forecast horizon should be the same as the '.assess' argument in get_models(). ",
-              "Setting h = ", attributes(.tbl)$get_models[["h"]], ".", immediate. = TRUE)
+        warning("The forecast horizon should be the same as the '.assess' argument in get_models(). ",
+                "Setting h = ", attributes(.tbl)$get_models[["h"]], ".", immediate. = TRUE)
 
-      .dots_expr$h <- attributes(.tbl)$get_models[["h"]]
+        .dots_expr$h <- attributes(.tbl)$get_models[["h"]]
+
+      }
 
     }
 
+    # extract attributes from .tbl
+    .fc_tbl <- attributes(.tbl)[["get_models"]][["attr_tbl"]]
+
+    # tidy_eval
+    .index_col <- .index_name # tibbletime::get_index_char(.tbl)
+    .group_col <- attributes(.tbl)$get_models$.group_col
+
+
+    # wrangle
+    .fc_tbl <- .fc_tbl %>%
+      tidyr::unnest(.data$assessment_tbl) %>%
+      dplyr::group_by(!!.group_col) %>%
+
+      # forecast
+      dplyr::mutate(
+        forecast_col = purrr::map(
+          .x = .data$models,
+          .f = ~ forecast::forecast(., !!!.dots_expr) %>%
+            sweep::sw_sweep() %>%
+            dplyr::slice(nrow(.)) #%>%
+            #dplyr::select(-c(.data$index:.data$key))
+        )
+      ) %>%
+
+      # reorganize
+      tidyr::unnest(.data$forecast_col) %>%
+      dplyr::select(-c(.data$splits:.data$analysis_xts, .data$models)) %>%
+      dplyr::select(.data[[!!.index_col]], !!.group_col, dplyr::everything()) %>%
+      dplyr::select(-c(4, 5)) %>%
+      dplyr::rename(point_forecast = "value") %>%
+      #dplyr::mutate_if(., purrr::is_character, forcats::as_factor) %>%
+      dplyr::distinct(.data[[!!.index_col]], .keep_all = TRUE) %>%
+      dplyr::ungroup()
+
+  } else {
+
+    rlang::abort('The object passed to get_forecasts() must be of a class YahooTickers.')
+
   }
 
-
-  # extract attributes from .tbl
-  .fc_tbl <- attributes(.tbl)[["get_models"]][["attr_tbl"]]
-
-  # tidy_eval
-  .index_col <- tibbletime::get_index_char(.tbl)
-  .group_col <- attributes(.tbl)$get_models$.group_col
-
-
-
-  # wrangle
-  .fc_tbl %>%
-    tidyr::unnest(.data$assessment_tbl, .drop = FALSE) %>%
-    dplyr::group_by(!!.group_col) %>%
-
-    # forecast
-    dplyr::mutate(
-      forecast_col = purrr::map(
-        .x = .data$models,
-        .f = ~ forecast::forecast(., !!!.dots_expr) %>%
-          sweep::sw_sweep() %>%
-          dplyr::slice(nrow(.)) %>%
-          dplyr::select(-c(.data$index:.data$key))
-      )
-    ) %>%
-
-    # reorganize
-    tidyr::unnest(.data$forecast_col, .drop = FALSE) %>%
-    dplyr::select(-c(.data$splits:.data$models)) %>%
-    dplyr::select(.data[[!!.index_col]], !!.group_col, dplyr::everything()) %>%
-    dplyr::rename(mean_forecast = "value") %>%
-    dplyr::mutate_if(., purrr::is_character, forcats::as_factor) %>%
-    dplyr::distinct(.data[[!!.index_col]], .keep_all = TRUE) %>%
-    dplyr::ungroup()
-
+  tibble::new_tibble(x = .fc_tbl, nrow = nrow(.fc_tbl), class = 'YahooTickers')
 
 }
 
 
-
-# Method tbl_time ---------------------------------------------------------
-
-#' @rdname get_forecasts
-#' @export
-get_forecast.tbl_time <- function(.tbl, ...) {
-
-  if (!("get_models" %in% names(attributes(.tbl)))) {
-    rlang::abort("The .tbl argument must be an object returned from get_models().")
-  }
-
-  # tidy_eval
-  .dots_expr <- dplyr::enquos(...)
-
-  # verify if the forecasting horizon is identical to .assess
-  if (!(purrr::is_empty(.dots_expr$h))) {
-
-    # if not coerce
-    if (rlang::eval_tidy(.dots_expr$h) != attributes(.tbl)$get_models[["h"]]) {
-
-      warning("The forecast horizon should be the same as the '.assess' argument in get_models(). ",
-              "Setting h = ", attributes(.tbl)$get_models[["h"]], ".", immediate. = TRUE)
-
-      .dots_expr$h <- attributes(.tbl)$get_models[["h"]]
-
-    }
-
-  }
-
-
-  # extract attributes from .tbl
-  .fc_tbl <- attributes(.tbl)[["get_models"]][["attr_tbl"]]
-
-
-  # tidy_eval
-  .index_col <- tibbletime::get_index_char(.tbl)
-  .group_col <- attributes(.tbl)$get_models$.group_col
-
-
-  # wrangle
-  .fc_tbl %>%
-    tidyr::unnest(.data$assessment_tbl, .drop = FALSE) %>%
-    dplyr::group_by(!!.group_col) %>%
-
-    # forecast
-    dplyr::mutate(
-      forecast_col = purrr::map(
-        .x = .data$models,
-        .f = ~ forecast::forecast(., !!!.dots_expr) %>%
-          sweep::sw_sweep() %>%
-          dplyr::slice(nrow(.)) %>%
-          dplyr::select(-c(.data$index:.data$key))
-      )
-    ) %>%
-
-    # reorganize
-    tidyr::unnest(.data$forecast_col, .drop = FALSE) %>%
-    dplyr::select(-c(.data$splits:.data$models)) %>%
-    dplyr::select(.data[[!!.index_col]], !!.group_col, dplyr::everything()) %>%
-    dplyr::rename(mean_forecast = "value") %>%
-    dplyr::mutate_if(., purrr::is_character, forcats::as_factor) %>%
-    dplyr::distinct(.data[[!!.index_col]], .keep_all = TRUE)
-
-
-}
-
+#'
+#' # Method tbl_time ---------------------------------------------------------
+#'
+#' #' @rdname get_forecasts
+#' #' @export
+#' get_forecast.tbl_time <- function(.tbl, ...) {
+#'
+#'   if (!("get_models" %in% names(attributes(.tbl)))) {
+#'     rlang::abort("The .tbl argument must be an object returned from get_models().")
+#'   }
+#'
+#'   # tidy_eval
+#'   .dots_expr <- dplyr::enquos(...)
+#'
+#'   # verify if the forecasting horizon is identical to .assess
+#'   if (!(purrr::is_empty(.dots_expr$h))) {
+#'
+#'     # if not coerce
+#'     if (rlang::eval_tidy(.dots_expr$h) != attributes(.tbl)$get_models[["h"]]) {
+#'
+#'       warning("The forecast horizon should be the same as the '.assess' argument in get_models(). ",
+#'               "Setting h = ", attributes(.tbl)$get_models[["h"]], ".", immediate. = TRUE)
+#'
+#'       .dots_expr$h <- attributes(.tbl)$get_models[["h"]]
+#'
+#'     }
+#'
+#'   }
+#'
+#'
+#'   # extract attributes from .tbl
+#'   .fc_tbl <- attributes(.tbl)[["get_models"]][["attr_tbl"]]
+#'
+#'
+#'   # tidy_eval
+#'   .index_col <- tibbletime::get_index_char(.tbl)
+#'   .group_col <- attributes(.tbl)$get_models$.group_col
+#'
+#'
+#'   # wrangle
+#'   .fc_tbl %>%
+#'     tidyr::unnest(.data$assessment_tbl, .drop = FALSE) %>%
+#'     dplyr::group_by(!!.group_col) %>%
+#'
+#'     # forecast
+#'     dplyr::mutate(
+#'       forecast_col = purrr::map(
+#'         .x = .data$models,
+#'         .f = ~ forecast::forecast(., !!!.dots_expr) %>%
+#'           sweep::sw_sweep() %>%
+#'           dplyr::slice(nrow(.)) %>%
+#'           dplyr::select(-c(.data$index:.data$key))
+#'       )
+#'     ) %>%
+#'
+#'     # reorganize
+#'     tidyr::unnest(.data$forecast_col, .drop = FALSE) %>%
+#'     dplyr::select(-c(.data$splits:.data$models)) %>%
+#'     dplyr::select(.data[[!!.index_col]], !!.group_col, dplyr::everything()) %>%
+#'     dplyr::rename(mean_forecast = "value") %>%
+#'     dplyr::mutate_if(., purrr::is_character, forcats::as_factor) %>%
+#'     dplyr::distinct(.data[[!!.index_col]], .keep_all = TRUE)
+#'
+#'
+#' }
+#'

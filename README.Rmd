@@ -22,6 +22,7 @@ library(dplyr)
 
 [![Travis build status](https://travis-ci.org/Reckziegel/YahooTickers.svg?branch=master)](https://travis-ci.org/Reckziegel/YahooTickers)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/Reckziegel/YahooTickers?branch=master&svg=true)](https://ci.appveyor.com/project/Reckziegel/YahooTickers)
+[![Codecov test coverage](https://codecov.io/gh/Reckziegel/YahooTickers/branch/master/graph/badge.svg)](https://codecov.io/gh/Reckziegel/YahooTickers?branch=master)
 
 The goal of YahooTickers is to easily get stock index constituents from [Yahoo Finance](https://finance.yahoo.com/) without having to worry about complicated `for` loops. This may be useful if you wish to focus as quickly as possible in time-series *modeling*, but also convenient if data is needed for it's side effects (e.g. plotting).  
 

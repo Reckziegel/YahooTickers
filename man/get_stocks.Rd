@@ -4,9 +4,15 @@
 \alias{get_stocks}
 \title{A wrapper over \code{getSymbols} that maps over index components.}
 \usage{
-get_stocks(tickers, from = "2010-01-01", to = Sys.Date(),
-  periodicity = "daily", simplify = TRUE, otherwise = NULL,
-  quiet = TRUE)
+get_stocks(
+  tickers,
+  from = "2010-01-01",
+  to = Sys.Date(),
+  periodicity = "daily",
+  simplify = TRUE,
+  otherwise = NULL,
+  quiet = TRUE
+)
 }
 \arguments{
 \item{tickers}{A character vector with the yahoo symbols.}

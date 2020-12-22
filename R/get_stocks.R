@@ -110,6 +110,7 @@ get_stocks <- function(tickers,
       .x = .data$result,
       .f = ~ dplyr::rename(
         .data    = .,
+        date     = 1,
         open     = 2,
         high     = 3,
         low      = 4,
@@ -121,7 +122,7 @@ get_stocks <- function(tickers,
     ) %>%
     tidyr::unnest(.data$result) %>%
     dplyr::select(
-      .data$index,
+      .data$date,
       .data$tickers,
       .data$open,
       .data$high,
@@ -130,12 +131,12 @@ get_stocks <- function(tickers,
       .data$volume,
       .data$adjusted
       ) %>%
-    dplyr::mutate_if(purrr::is_character, forcats::as_factor) %>%
-    tibbletime::as_tbl_time(., index = "index")
+    dplyr::mutate_if(purrr::is_character, forcats::as_factor) #%>%
 
+  # FIXME must ensure that simplify is a logical argument
   if (simplify) {
 
-    stocks_simple
+    tibble::new_tibble(x = stocks_simple, nrow = nrow(stocks_simple), class = 'YahooTickers')
 
   } else {
 
@@ -144,12 +145,13 @@ get_stocks <- function(tickers,
       dplyr::select(.data$error)
 
     if (nrow(error_simple) == 0) {
-
       error_simple <- "No error found."
-
     }
 
-    list(result = stocks_simple, error = error_simple)
+    list(
+      result = tibble::new_tibble(x = stocks_simple, nrow = nrow(stocks_simple), class = 'YahooTickers'),
+      error  = tibble::new_tibble(x = error_simple, nrow = nrow(error_simple), class = 'YahooTickers')
+    )
 
   }
 

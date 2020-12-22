@@ -35,9 +35,6 @@
 #' @param .group The column in which the data should be grouped. This will often be a column with stock tickers or stocks names.
 #' @param .truth The truth results of a time series realization.
 #' @param .forecast The out-of-sample forecasts from the chosen model.
-#' @param ... Additional parameters to be passed to \code{group_by()}. Read the details.
-#'
-#' @seealso \href{https://business-science.github.io/tibbletime/reference/collapse_by.html}{collapse_by()}
 #'
 #' @return A \code{tibble} with the following summary statistics by asset: mse, rmse, mae, mape and mase.
 #'
@@ -49,39 +46,39 @@
 #' library(forecast)
 #'
 #' get_tickers(dow) %>%
-#'   slice(1:5) %>%
+#'   slice(1:2) %>%
 #'   get_stocks(., periodicity = "monthly") %>%
 #'   get_returns(., tickers, log, TRUE, adjusted) %>%
 #'   get_models(., tickers, adjusted, 100, 1, FALSE, auto.arima,
 #'              seasonal = FALSE, stationary = TRUE) %>%
 #'   get_forecasts(.) %>%
-#'   get_metrics(., tickers, adjusted, mean_forecast)
-get_metrics <- function(.tbl, .group, .truth, .forecast, ...) {
+#'   get_metrics(., tickers, adjusted, point_forecast)
+get_metrics <- function(.tbl, .group, .truth, .forecast) {
 
   # tidy eval
   .group_expr    <- dplyr::enquo(.group)
   .truth_expr    <- dplyr::enquo(.truth)
   .forecast_expr <- dplyr::enquo(.forecast)
-  .dots_expr     <- dplyr::enquos(..., .named = TRUE)
+  #.dots_expr     <- dplyr::enquos(..., .named = TRUE)
 
-  # should the index be agreggated as well?
-  if (!rlang::is_empty(!!!.dots_expr)) {
-
-    .tbl       <- tibbletime::collapse_by(.tbl, !!!.dots_expr)
-    .index_quo <- tibbletime::get_index_quo(.tbl)
-
-    .tbl_grouped <- .tbl %>%
-      dplyr::group_by(!!.index_quo, !!.group_expr)
-
-  } else {
-
-    .tbl_grouped <- .tbl %>%
-      dplyr::group_by(!!.group_expr)
-
-  }
+  # # should the index be agreggated as well?
+  # if (!rlang::is_empty(!!!.dots_expr)) {
+  #
+  #   .tbl       <- tibbletime::collapse_by(.tbl, !!!.dots_expr)
+  #   .index_quo <- tibbletime::get_index_quo(.tbl)
+  #
+  #   .tbl_grouped <- .tbl %>%
+  #     dplyr::group_by(!!.index_quo, !!.group_expr)
+  #
+  # } else {
+  #
+  #   .tbl_grouped <- .tbl %>%
+  #     dplyr::group_by(!!.group_expr)
+  #
+  # }
 
   # calculate error metrics
-  .tbl_grouped %>%
+  .tbl %>%
     dplyr::select(1:4) %>%
     dplyr::mutate(error = (!!.truth_expr) - (!!.forecast_expr)) %>%
     dplyr::summarise(
