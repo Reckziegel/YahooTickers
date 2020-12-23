@@ -2,8 +2,7 @@
 #'
 #' Summarise the out-of-sample stocks forecasts by asset and time periods.
 #'
-#'
-#' @param .tbl A \code{tibble} of the \code{tbl_time} class.
+#' @param .tbl A \code{tibble} object..
 #' @param .group The column in which the data should be grouped. This will often be a column with stock tickers or stocks names.
 #' @param .truth The truth results of a time series realization.
 #' @param .forecast The out-of-sample forecasts from the chosen model.

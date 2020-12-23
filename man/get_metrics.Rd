@@ -7,7 +7,7 @@
 get_metrics(.tbl, .group, .truth, .forecast)
 }
 \arguments{
-\item{.tbl}{A \code{tibble} of the \code{tbl_time} class.}
+\item{.tbl}{A \code{tibble} object..}
 
 \item{.group}{The column in which the data should be grouped. This will often be a column with stock tickers or stocks names.}
 
