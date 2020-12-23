@@ -34,7 +34,7 @@ A tidy \code{tibble}.
 }
 \description{
 Stock prices are known for been non-stationary. Use \code{get_returns()} as a
-preprocessing step for econometric modeling.
+pre-processing step for econometric modeling.
 }
 \examples{
 library(YahooTickers)

@@ -36,8 +36,9 @@ get_tickers(dow) \%>\%
   get_returns(., tickers, log, TRUE, adjusted) \%>\%
   get_models(., tickers, adjusted, 100, 1, FALSE, auto.arima,
              seasonal = FALSE, stationary = TRUE) \%>\%
-  get_forecasts(.)
+  get_forecasts(.) # h = 1 because .assess = 1
 }
 \seealso{
 \href{https://tidymodels.github.io/rsample/reference/rolling_origin.html}{rolling_origin()}
+         \href{https://pkg.robjhyndman.com/forecast/}{forecast}
 }

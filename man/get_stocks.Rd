@@ -15,7 +15,7 @@ get_stocks(
 )
 }
 \arguments{
-\item{tickers}{A character vector with the yahoo symbols.}
+\item{tickers}{A \code{character} vector with the stock tickers.}
 
 \item{from}{A date in the format \code{YYYY-MM-DD}.}
 
@@ -26,15 +26,15 @@ get_stocks(
 \item{simplify}{If TRUE, a \code{tibble} is returned. If FALSE a list with two elements is returned:
 
   \itemize{
-    \item \code{result}: with the downloads that sucedded;
+    \item \code{result}: with the downloads that succeeded;
     \item \code{error}: with the stocks not covered by the Yahoo Finance.
   }
 
 The defaul is TRUE.}
 
-\item{otherwise}{Argument passed to \code{purrr::safely}.}
+\item{otherwise}{Argument passed to \code{\link[purrr]{safely}}.}
 
-\item{quiet}{Argument passed to \code{purrr::safely}. A notification is showed whenever an error occurs. Default is \code{TRUE}.}
+\item{quiet}{Argument passed to \code{\link[purrr]{safely}}. A notification is showed whenever an error occurs. Default is \code{TRUE}.}
 }
 \value{
 A tidy \code{tibble} if \code{simplify = TRUE} and a \code{list} of two components if \code{simplify = FALSE}.

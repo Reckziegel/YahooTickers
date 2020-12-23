@@ -2,21 +2,21 @@
 #'
 #' \code{get_stocks()} allows you to quickly download stock indexes from the the \href{https://finance.yahoo.com/}{Yahoo Finance} without having to run \code{for} loops.
 #'
-#' @param tickers A character vector with the yahoo symbols.
+#' @param tickers A \code{character} vector with the stock tickers.
 #' @param from A date in the format \code{YYYY-MM-DD}.
 #' @param to A date in the format \code{YYYY-MM-DD}.
 #' @param periodicity One of: \code{daily}, \code{weely} or \code{monthly}.
 #' @param simplify If TRUE, a \code{tibble} is returned. If FALSE a list with two elements is returned:
 #'
 #'   \itemize{
-#'     \item \code{result}: with the downloads that sucedded;
+#'     \item \code{result}: with the downloads that succeeded;
 #'     \item \code{error}: with the stocks not covered by the Yahoo Finance.
 #'   }
 #'
 #' The defaul is TRUE.
 #'
-#' @param otherwise Argument passed to \code{purrr::safely}.
-#' @param quiet Argument passed to \code{purrr::safely}. A notification is showed whenever an error occurs. Default is \code{TRUE}.
+#' @param otherwise Argument passed to \code{\link[purrr]{safely}}.
+#' @param quiet Argument passed to \code{\link[purrr]{safely}}. A notification is showed whenever an error occurs. Default is \code{TRUE}.
 #'
 #' @return A tidy \code{tibble} if \code{simplify = TRUE} and a \code{list} of two components if \code{simplify = FALSE}.
 #'

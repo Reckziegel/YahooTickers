@@ -73,4 +73,5 @@ get_tickers(dow) \%>\%
 \href{https://business-science.github.io/sweep/reference/sw_tidy.html}{sw_tidy()}
          \href{https://business-science.github.io/sweep/reference/tidiers_arima.html}{sw_glance()}
          \href{https://tidymodels.github.io/rsample/reference/rolling_origin.html}{rolling_origin()}
+         \href{https://pkg.robjhyndman.com/forecast/}{forecast}
 }

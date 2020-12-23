@@ -30,7 +30,7 @@
 #'   \item \code{merval}: Merval Index (Argentina)
 #'}
 #'
-#' @param exchange A desired exchange.
+#' @param exchange A desired exchange. Dee Details.
 #'
 #' @return A \code{tibble} with stocks' codes used in Yahoo Finance website.
 #'

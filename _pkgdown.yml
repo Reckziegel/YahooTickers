@@ -1,0 +1,32 @@
+template:
+  params:
+    bootswatch: cosmo
+
+navbar:
+  title: "YahooTickers"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Function Reference"
+      href: reference/index.html
+
+  right:
+    - icon: fa-github
+      href: https://github.com/Reckziegel/YahooTickers
+
+reference:
+
+    - title: Main Functions
+      contents:
+      - get_tickers
+      - get_stocks
+      - get_returns
+      - get_models
+      - get_forecasts
+      - get_metrics
+
+    - title: Internal Helpers
+      contents:
+      - get_index_col
+      - get_index_char
+      - get_index_quo
