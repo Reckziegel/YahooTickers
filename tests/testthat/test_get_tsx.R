@@ -18,9 +18,10 @@ test_that("returns a tibble with one column and rows of lenght >= 200", {
 
   # size
   expect_equal(tsx_tickers %>% ncol(), 1L)
-  expect_gte(tsx_tickers %>% nrow(), 200)
+  expect_gte(tsx_tickers %>% nrow(), 234L)
 
   # tickers length
-  expect_lte(purrr::map(tsx_tickers, stringr::str_length)[[1]] %>% max(), 10)
+  expect_lte(purrr::map(tsx_tickers, stringr::str_length)[[1]] %>% na.omit() %>% max(), 10)
 
 })
+

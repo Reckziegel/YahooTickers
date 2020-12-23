@@ -16,7 +16,7 @@ stocks %>% get_returns(.group = stock, .type = arithmetic, .omit_na = TRUE, ret 
 
 test_that("A tibble is returned with the correct dimmensions", {
 
-  # .omit_na = FALSE dows not delete any row
+  # .omit_na = FALSE do not delete any row
   expect_equal(
     get_returns(.tbl = stocks, .group = stock, .type = arithmetic, .omit_na = FALSE, price) %>%
       nrow(),

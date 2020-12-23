@@ -29,16 +29,17 @@ test_that("The output contains the correct dimmensions", {
 
   # class
   expect_is(stock_fc, "tbl")
+  expect_is(stock_fc, "YahooTickers")
 
   # rows
-  expect_equal(nrow(stock_fc), 30)
+  expect_equal(nrow(stock_fc), 30L)
 
   # cols
-  expect_equal(ncol(stock_fc), 8)
+  expect_equal(ncol(stock_fc), 8L)
 
   # names
   expect_equal(names(stock_fc),
-               c("time", "stock", "price", "mean_forecast", "lo.80", "lo.95", "hi.80", "hi.95")
+               c("time", "stock", "price", "point_forecast", "lo.80", "lo.95", "hi.80", "hi.95")
   )
 
 

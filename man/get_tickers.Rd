@@ -7,10 +7,10 @@
 get_tickers(exchange)
 }
 \arguments{
-\item{exchange}{A single string.}
+\item{exchange}{A desired exchange. Dee Details.}
 }
 \value{
-A vector of character strings.
+A \code{tibble} with stocks' codes used in Yahoo Finance website.
 }
 \description{
 \code{get_tickers()} helps you to get the tickers of a specific stock index.

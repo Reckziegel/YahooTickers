@@ -2,7 +2,7 @@ library(YahooTickers)
 
 context("testing get_amex()")
 
-#amex_tickers <- YahooTickers:::get_amex()
+amex_tickers <- YahooTickers:::get_amex()
 
 test_that("returns a tibble with one column and rows of lenght >= 100", {
 
