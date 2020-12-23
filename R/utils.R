@@ -1,5 +1,9 @@
 #' A collection of utility functions
 #'
+#' A collection of utility functions to get market data from the Web.
+#'
+#' @details NULL
+#'
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
@@ -27,7 +31,7 @@ get_sp500 <- function() {
     insistently_read_html() %>%
     rvest::html_node(css = "table") %>%
     rvest::html_table(., fill = TRUE) %>%
-    tibble::set_tidy_names() %>%
+    vctrs::vec_as_names_legacy(.) %>%
     dplyr::rename(tickers = "Symbol") %>%
     dplyr::select(.data$tickers) %>%
     dplyr::as_tibble()
@@ -54,33 +58,34 @@ get_dow <- function() {
 }
 
 
-#' @rdname utils
-get_nasdaq <- function() {
-
-  path <- "https://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&render=download"
-
-  message(
-    "Yahoo does not provide the NASDAQ components. Tickers been downloaded from: ",
-    crayon::cyan("www.nasdaq.com"),
-    "."
-    )
-
-  suppressMessages(
-    suppressWarnings(
-      readr::read_csv(file = path)
-    )
-  ) %>%
-    dplyr::rename(tickers = .data$Symbol) %>%
-    dplyr::select(.data$tickers)
-
-}
+# @rdname utils
+# get_nasdaq <- function() {
+#
+#   ## TODO fix this code
+#   #path <- "https://www.nasdaq.com/screening/companies-by-industry.aspx?exchange##=NASDAQ&render=download"
+#
+#   message(
+#     "Yahoo does not provide the NASDAQ components. Tickers been downloaded from: ",
+#     crayon::cyan("www.nasdaq.com"),
+#     "."
+#     )
+#
+#   suppressMessages(
+#     suppressWarnings(
+#       readr::read_csv(file = path)
+#     )
+#   ) %>%
+#     dplyr::rename(tickers = .data$Symbol) %>%
+#     dplyr::select(.data$tickers)
+#
+# }
 
 
 #' @rdname utils
 get_nyse <- function() {
 
   path <- "https://money.cnn.com/data/markets/nyse/?page="
-  pages <- 1:128
+  pages <- 1:129
   paths <- stringr::str_c(path, pages)
 
   message(
@@ -93,11 +98,11 @@ get_nyse <- function() {
 
     insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
-    path %>%
+    paths %>%
       insistently_read_html() %>%
       rvest::html_nodes(css = "table") %>%
       rvest::html_table() %>%
-      .[[5]] %>%
+      purrr::chuck(4) %>%
       dplyr::select(.data$Company) %>%
       tidyr::separate(.data$Company, into = c("tickers", "company"), extra = "drop") %>%
       dplyr::select(.data$tickers) %>%
@@ -114,7 +119,7 @@ get_nyse <- function() {
 get_amex <- function() {
 
   path <- "https://money.cnn.com/data/markets/amex/?page="
-  pages <- 1:17
+  pages <- 1:14
   paths <- stringr::str_c(path, pages)
 
   message(
@@ -126,11 +131,11 @@ get_amex <- function() {
 
     insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
-    path %>%
+    paths %>%
       insistently_read_html() %>%
       rvest::html_nodes(css = "table") %>%
       rvest::html_table() %>%
-      .[[4]] %>%
+      purrr::chuck(4) %>%
       dplyr::select(.data$Company) %>%
       tidyr::separate(.data$Company, into = c("tickers", "company"), extra = "drop") %>%
       dplyr::select(.data$tickers) %>%
@@ -147,7 +152,7 @@ get_amex <- function() {
 get_russell2000 <- function() {
 
   path <- "https://money.cnn.com/data/markets/russell/?page="
-  pages <- 1:86
+  pages <- 1:10
   paths <- stringr::str_c(path, pages)
 
   message(
@@ -160,11 +165,11 @@ get_russell2000 <- function() {
 
     insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
-    path %>%
+    paths %>%
       insistently_read_html() %>%
       rvest::html_nodes(css = "table") %>%
       rvest::html_table() %>%
-      .[[4]] %>%
+      purrr::chuck(4) %>%
       dplyr::select(.data$Company) %>%
       tidyr::separate(.data$Company, into = c("tickers", "company"), extra = "drop") %>%
       dplyr::select(.data$tickers) %>%
@@ -194,14 +199,14 @@ get_ftse100 <- function() {
 
     insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
-    path %>%
+    paths %>%
       insistently_read_html() %>%
       rvest::html_nodes(css = "table") %>%
       rvest::html_table() %>%
       data.frame() %>%
-      tibble::set_tidy_names(., quiet = TRUE) %>%
+      vctrs::vec_as_names_legacy() %>%
       dplyr::as_tibble() %>%
-      dplyr::rename(tickers = .data$Code) %>%
+      dplyr::rename(tickers = 1) %>%
       dplyr::select(.data$tickers) %>%
       dplyr::mutate(tickers = stringr::str_c(.data$tickers, ".L") %>%
                       stringr::str_replace(., "\\..L", "\\.L")
@@ -236,23 +241,41 @@ get_dax <- function() {
 #' @rdname utils
 get_cac40 <- function() {
 
-  path <- "http://topforeignstocks.com/indices/components-of-the-cac-40-index/"
+  # TODO for now get the first 30 components from yahoo website.
+  # TODO find a website that offers the list of stocks with the right tickers
+
+  # path <- "http://topforeignstocks.com/indices/components-of-the-cac-40-index/"
+  #
+  # message(
+  #   "Yahoo does not provide the CAC 40 components. Tickers been downloaded from: ",
+  #   crayon::cyan("topforeignstocks.com"),
+  #   "."
+  #   )
+
+  path <- 'https://finance.yahoo.com/quote/%5EFCHI/components?p=%5EFCHI'
 
   message(
-    "Yahoo does not provide the CAC 40 components. Tickers been downloaded from: ",
-    crayon::cyan("topforeignstocks.com"),
-    "."
-    )
+    "Yahoo does not provide the CAC 40 components, but it's website it's beeing used temporarily while no other reliable website with the tickers is found."
+  )
 
   insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
+  # path %>%
+  #   insistently_read_html() %>%
+  #   rvest::html_nodes(css = "table") %>%
+  #   rvest::html_table() %>%
+  #   data.frame() %>%
+  #   dplyr::as_tibble() %>%
+  #   dplyr::rename(tickers = .data$`Ticker..in.Yahoo.Finance.`) %>%
+  #   dplyr::select(.data$tickers)
+
   path %>%
     insistently_read_html() %>%
-    rvest::html_nodes(css = "table") %>%
+    rvest::html_node(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = .data$`Ticker..in.Yahoo.Finance.`) %>%
+    dplyr::rename(tickers = .data$Symbol) %>%
     dplyr::select(.data$tickers)
 
 }
@@ -269,7 +292,7 @@ get_bel20 <- function() {
     insistently_read_html() %>%
     rvest::html_nodes(css = "table") %>%
     rvest::html_table() %>%
-    data.frame() %>%
+    as.data.frame() %>%
     dplyr::as_tibble() %>%
     dplyr::rename(tickers = .data$Symbol) %>%
     dplyr::select(.data$tickers)
@@ -306,23 +329,42 @@ get_topix <- function() {
 #' @rdname utils
 get_hangseng <- function() {
 
-  path <- "http://topforeignstocks.com/indices/components-of-the-hang-seng-index/"
+  # path <- "http://topforeignstocks.com/indices/components-of-the-hang-seng-index/"
+  #
+  # message(
+  #   "Yahoo does not provide the Hang Seng components. Tickers been downloaded from: ",
+  #   crayon::cyan("topforeignstocks.com"),
+  #   "."
+  #   )
+  #
+  # insistently_read_html <- purrr::insistently(f = xml2::read_html)
+  #
+  # path %>%
+  #   insistently_read_html() %>%
+  #   rvest::html_nodes(css = "table") %>%
+  #   rvest::html_table() %>%
+  #   data.frame() %>%
+  #   dplyr::as_tibble() %>%
+  #   dplyr::rename(tickers = .data$Ticker) %>%
+  #   dplyr::select(.data$tickers)
+  #
+  #    path <- 'https://finance.yahoo.com/quote/%5EFCHI/components?p=%5EFCHI'
 
   message(
-    "Yahoo does not provide the Hang Seng components. Tickers been downloaded from: ",
-    crayon::cyan("topforeignstocks.com"),
-    "."
-    )
+    "Yahoo does not provide all the hangseng components, but it's website it's beeing used temporarily while no other reliable website with the tickers is found."
+  )
+
+  path <- "https://finance.yahoo.com/quote/%5EHSI/components"
 
   insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
   path %>%
     insistently_read_html() %>%
-    rvest::html_nodes(css = "table") %>%
+    rvest::html_node(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = .data$Ticker) %>%
+    dplyr::rename(tickers = .data$Symbol) %>%
     dplyr::select(.data$tickers)
 
 }
@@ -331,25 +373,37 @@ get_hangseng <- function() {
 #' @rdname utils
 get_sensex <- function() {
 
-  path <- "http://topforeignstocks.com/indices/components-of-the-sensex-index"
-
-  message(
-    "Yahoo does not provide the Sensex components. Tickers been downloaded from: ",
-    crayon::cyan("topforeignstocks.com"),
-    "."
-    )
+  # path <- "http://topforeignstocks.com/indices/components-of-the-sensex-index"
+  #
+  # message(
+  #   "Yahoo does not provide the Sensex components. Tickers been downloaded from: ",
+  #   crayon::cyan("topforeignstocks.com"),
+  #   "."
+  #   )
+  #
+  path <- "https://in.finance.yahoo.com/quote/%5EBSESN/components?p=%5EBSESN"
 
   insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
+  # path %>%
+  #   insistently_read_html() %>%
+  #   rvest::html_nodes(css = "table") %>%
+  #   rvest::html_table() %>%
+  #   data.frame() %>%
+  #   dplyr::as_tibble() %>%
+  #   dplyr::rename(tickers = .data$Scrip.Code) %>%
+  #   dplyr::select(.data$tickers) %>%
+  #   dplyr::mutate(tickers = stringr::str_c(.data$tickers, ".BO"))
+
   path %>%
     insistently_read_html() %>%
-    rvest::html_nodes(css = "table") %>%
+    rvest::html_node(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = .data$Scrip.Code..on.BSE.) %>%
-    dplyr::select(.data$tickers) %>%
-    dplyr::mutate(tickers = stringr::str_c(.data$tickers, ".BO"))
+    dplyr::rename(tickers = .data$Symbol) %>%
+    dplyr::select(.data$tickers)
+
 
 }
 
@@ -373,7 +427,7 @@ get_jakarta <- function() {
     rvest::html_table() %>%
     data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = .data$Stock.Code) %>%
+    dplyr::rename(tickers = .data$Code) %>%
     dplyr::select(.data$tickers) %>%
     dplyr::mutate(tickers = stringr::str_c(.data$tickers, ".JK"))
 
@@ -383,24 +437,37 @@ get_jakarta <- function() {
 #' @rdname utils
 get_bursa <- function() {
 
-  path <- "http://topforeignstocks.com/indices/the-components-of-the-ftse-bursa-malaysia-klci-index"
+  # path <- "http://topforeignstocks.com/indices/the-components-of-the-ftse-bursa-malaysia-klci-index"
+  #
+  # message(
+  #   "Yahoo does not provide the FTSE Bursa Index components. Tickers been downloaded from: ",
+  #   crayon::cyan("topforeignstocks.com"),
+  #   "."
+  #   )
+  #
+  # insistently_read_html <- purrr::insistently(f = xml2::read_html)
+  #
+  # path %>%
+  #   insistently_read_html() %>%
+  #   rvest::html_nodes(css = "table") %>%
+  #   rvest::html_table() %>%
+  #   data.frame() %>%
+  #   dplyr::as_tibble() %>%
+  #   dplyr::rename(tickers = .data$Ticker) %>%
+  #   stats::na.omit() %>%
+  #   dplyr::select(.data$tickers)
 
-  message(
-    "Yahoo does not provide the FTSE Bursa Index components. Tickers been downloaded from: ",
-    crayon::cyan("topforeignstocks.com"),
-    "."
-    )
+  path <- "https://in.finance.yahoo.com/quote/%5EBSESN/components?p=%5EBSESN"
 
   insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
   path %>%
     insistently_read_html() %>%
-    rvest::html_nodes(css = "table") %>%
+    rvest::html_node(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = .data$Ticker) %>%
-    stats::na.omit() %>%
+    dplyr::rename(tickers = .data$Symbol) %>%
     dplyr::select(.data$tickers)
 
 }
@@ -409,25 +476,39 @@ get_bursa <- function() {
 #' @rdname utils
 get_nzx50 <- function() {
 
-  path <- "http://topforeignstocks.com/indices/components-of-the-nzsx-50-index"
+  # path <- "http://topforeignstocks.com/indices/components-of-the-nzsx-50-index"
+  #
+  # message(
+  #   "Yahoo does not provide the NZX 50 Index components. Tickers been downloaded from: ",
+  #   crayon::cyan("topforeignstocks.com"),
+  #   "."
+  # )
+  #
+  # insistently_read_html <- purrr::insistently(f = xml2::read_html)
+  #
+  # path %>%
+  #   insistently_read_html() %>%
+  #   rvest::html_nodes(css = "table") %>%
+  #   rvest::html_table() %>%
+  #   purrr::chuck(1) %>%
+  #   data.frame() %>%
+  #   dplyr::as_tibble() %>%
+  #   dplyr::rename(tickers = .data$Ticker) %>%
+  #   dplyr::select(.data$tickers) #%>%
+    #dplyr::mutate(tickers = stringr::str_c(.data$tickers, ".NZ"))
 
-  message(
-    "Yahoo does not provide the NZX 50 Index components. Tickers been downloaded from: ",
-    crayon::cyan("topforeignstocks.com"),
-    "."
-  )
+  path <- "https://nz.finance.yahoo.com/quote/%5ENZ50/components?p=%5ENZ50"
 
   insistently_read_html <- purrr::insistently(f = xml2::read_html)
 
   path %>%
     insistently_read_html() %>%
-    rvest::html_nodes(css = "table") %>%
+    rvest::html_node(css = "table") %>%
     rvest::html_table() %>%
     data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = .data$Ticker) %>%
-    dplyr::select(.data$tickers) %>%
-    dplyr::mutate(tickers = stringr::str_c(.data$tickers, ".NZ"))
+    dplyr::rename(tickers = .data$Symbol) %>%
+    dplyr::select(.data$tickers)
 
 }
 
@@ -503,7 +584,7 @@ get_tsx  <- function() {
     rvest::html_table() %>%
     data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::rename(tickers = .data$Ticker..on.TSX.) %>%
+    dplyr::rename(tickers = .data$Ticker) %>%
     dplyr::select(.data$tickers)
 
 }

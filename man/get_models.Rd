@@ -4,19 +4,13 @@
 \alias{get_models}
 \alias{get_models.default}
 \alias{get_models.tbl_df}
-\alias{get_models.tbl_time}
 \title{Extract in-sample statistics estimated in "real-time"}
 \usage{
 get_models(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...)
 
-\method{get_models}{default}(.tbl, .group, .col, .initial, .assess,
-  .cumulative, .fun, ...)
+\method{get_models}{default}(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...)
 
-\method{get_models}{tbl_df}(.tbl, .group, .col, .initial, .assess,
-  .cumulative, .fun, ...)
-
-\method{get_models}{tbl_time}(.tbl, .group, .col, .initial, .assess,
-  .cumulative, .fun, ...)
+\method{get_models}{tbl_df}(.tbl, .group, .col, .initial, .assess, .cumulative, .fun, ...)
 }
 \arguments{
 \item{.tbl}{A tidy \code{tibble} or an object of the \code{tbl_time} class.}
@@ -79,4 +73,5 @@ get_tickers(dow) \%>\%
 \href{https://business-science.github.io/sweep/reference/sw_tidy.html}{sw_tidy()}
          \href{https://business-science.github.io/sweep/reference/tidiers_arima.html}{sw_glance()}
          \href{https://tidymodels.github.io/rsample/reference/rolling_origin.html}{rolling_origin()}
+         \href{https://pkg.robjhyndman.com/forecast/}{forecast}
 }

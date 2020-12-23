@@ -4,7 +4,6 @@
 \alias{utils}
 \alias{get_sp500}
 \alias{get_dow}
-\alias{get_nasdaq}
 \alias{get_nyse}
 \alias{get_amex}
 \alias{get_russell2000}
@@ -31,8 +30,6 @@
 get_sp500()
 
 get_dow()
-
-get_nasdaq()
 
 get_nyse()
 
@@ -80,5 +77,5 @@ validate_funs(.fun)
 \item{.fun}{A valid function from the forecast package.}
 }
 \description{
-A collection of utility functions
+A collection of utility functions to get market data from the Web.
 }

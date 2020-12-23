@@ -18,7 +18,7 @@ test_that("returns a tibble with one column and rows of lenght >= 49", {
 
   # size
   expect_equal(nzx50_tickers %>% ncol(), 1L)
-  expect_gte(nzx50_tickers %>% nrow(), 49)
+  expect_gte(nzx50_tickers %>% nrow(), 30L)
 
   # tickers length
   expect_lte(purrr::map(nzx50_tickers, stringr::str_length)[[1]] %>% max(), 7)

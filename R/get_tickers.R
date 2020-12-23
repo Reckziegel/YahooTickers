@@ -30,9 +30,9 @@
 #'   \item \code{merval}: Merval Index (Argentina)
 #'}
 #'
-#' @param exchange A single string.
+#' @param exchange A desired exchange. Dee Details.
 #'
-#' @return A vector of character strings.
+#' @return A \code{tibble} with stocks' codes used in Yahoo Finance website.
 #'
 #' @importFrom magrittr "%>%"
 #'
@@ -59,16 +59,20 @@ get_tickers <- function(exchange) {
 
   exchange_arg <- rlang::arg_match(
     arg    = exchange,
-    values = c("dow", "sp500", "nasdaq", "nyse", "amex", "russell2000", "ftse100",
+    values = c("dow", "sp500",
+               #"nasdaq",
+               "nyse", "amex", "russell2000", "ftse100",
                "dax", "cac40", "bel20", "topix", "hangseng", "sensex", "jakarta",
                "bursa", "nzx50", "kospi", "taiex", "tsx", "ibovespa", "ipc", "ipsa",
                "merval")
   )
 
+  if (exchange == 'nasdaq') stop('This stock index is temporarily retired', call. = FALSE)
+
   tickers <- switch(exchange_arg,
                     sp500       = get_sp500(),
                     dow         = get_dow(),
-                    nasdaq      = get_nasdaq(),
+                    #nasdaq      = get_nasdaq(),
                     nyse        = get_nyse(),
                     amex        = get_amex(),
                     russell2000 = get_russell2000(),
