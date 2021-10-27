@@ -48,8 +48,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/Reckziegel/YahooTickers">
-    <span class="fas fa-github"></span>
+  <a href="https://github.com/Reckziegel/YahooTickers/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -88,20 +88,20 @@
   <span class="fu"><a href="reference/get_stocks.html">get_stocks</a></span><span class="op">(</span><span class="va">.</span>, periodicity <span class="op">=</span> <span class="st">"monthly"</span><span class="op">)</span>
 
 <span class="va">dow</span> 
-<span class="co">#&gt; # A tibble: 3,880 x 8</span>
+<span class="co">#&gt; # A tibble: 4,149 x 8</span>
 <span class="co">#&gt;    date       tickers  open  high   low close    volume adjusted</span>
 <span class="co">#&gt;    &lt;date&gt;     &lt;fct&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 2010-01-01 WMT      53.7  55.2  52.5  53.4 291591500     40.8</span>
-<span class="co">#&gt;  2 2010-02-01 WMT      53.6  54.5  52.7  54.1 278505000     41.3</span>
-<span class="co">#&gt;  3 2010-03-01 WMT      54.0  56.3  53.2  55.6 270764400     42.4</span>
-<span class="co">#&gt;  4 2010-04-01 WMT      55.8  55.9  53.5  53.6 282951100     41.2</span>
-<span class="co">#&gt;  5 2010-05-01 WMT      53.9  55.0  50    50.6 398119000     38.8</span>
-<span class="co">#&gt;  6 2010-06-01 WMT      50.8  52.1  48.0  48.1 390548500     37.1</span>
-<span class="co">#&gt;  7 2010-07-01 WMT      48.1  51.8  47.8  51.2 280340800     39.5</span>
-<span class="co">#&gt;  8 2010-08-01 WMT      51.5  52.5  50    50.1 272559100     38.7</span>
-<span class="co">#&gt;  9 2010-09-01 WMT      50.5  54.4  50.5  53.5 216284000     41.6</span>
-<span class="co">#&gt; 10 2010-10-01 WMT      53.6  54.8  52.9  54.2 208445100     42.1</span>
-<span class="co">#&gt; # ... with 3,870 more rows</span></code></pre></div>
+<span class="co">#&gt;  1 2010-01-01 MMM      83.1  85.2  79.1  80.5  75208100     58.5</span>
+<span class="co">#&gt;  2 2010-02-01 MMM      80.8  81.8  77.2  80.2  75020400     58.3</span>
+<span class="co">#&gt;  3 2010-03-01 MMM      80.6  84.5  80.3  83.6  91066100     61.2</span>
+<span class="co">#&gt;  4 2010-04-01 MMM      83.9  90.2  82.7  88.7  96407000     64.9</span>
+<span class="co">#&gt;  5 2010-05-01 MMM      89.2  90.5  69.0  79.3 109573600     58.1</span>
+<span class="co">#&gt;  6 2010-06-01 MMM      78.7  83    72.7  79.0 114407500     58.2</span>
+<span class="co">#&gt;  7 2010-07-01 MMM      79.1  87.5  77.0  85.5  89556700     63.0</span>
+<span class="co">#&gt;  8 2010-08-01 MMM      86.8  88.4  78.4  78.6  74721100     57.9</span>
+<span class="co">#&gt;  9 2010-09-01 MMM      79.5  88    79.3  86.7  64059700     64.3</span>
+<span class="co">#&gt; 10 2010-10-01 MMM      87.4  91.5  83.8  84.2  82038100     62.4</span>
+<span class="co">#&gt; # ... with 4,139 more rows</span></code></pre></div>
 <p>With additional functions provided in the package it’s possible to fit a model in a rolling or expanding time window. This is done by <code><a href="reference/get_models.html">get_models()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.robjhyndman.com/forecast/">forecast</a></span><span class="op">)</span>
@@ -130,20 +130,20 @@
     <span class="op">)</span> 
 
 <span class="va">merval_models</span>
-<span class="co">#&gt; # A tibble: 496 x 17</span>
-<span class="co">#&gt;    date       tickers data  term  estimate model.desc sigma logLik   AIC   BIC</span>
-<span class="co">#&gt;    &lt;date&gt;     &lt;fct&gt;   &lt;lis&gt; &lt;fct&gt;    &lt;dbl&gt; &lt;fct&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 2018-06-01 GGAL.BA &lt;tib~ alpha 0.000100 ETS(A,N,N) 0.126  -22.5  50.9  58.7</span>
-<span class="co">#&gt;  2 2018-06-01 GGAL.BA &lt;tib~ l     0.0397   ETS(A,N,N) 0.126  -22.5  50.9  58.7</span>
-<span class="co">#&gt;  3 2018-07-01 GGAL.BA &lt;tib~ alpha 0.000100 ETS(A,N,N) 0.127  -23.3  52.6  60.4</span>
-<span class="co">#&gt;  4 2018-07-01 GGAL.BA &lt;tib~ l     0.0383   ETS(A,N,N) 0.127  -23.3  52.6  60.4</span>
-<span class="co">#&gt;  5 2018-08-01 GGAL.BA &lt;tib~ alpha 0.000100 ETS(A,N,N) 0.126  -23.5  53.1  60.9</span>
-<span class="co">#&gt;  6 2018-08-01 GGAL.BA &lt;tib~ l     0.0381   ETS(A,N,N) 0.126  -23.5  53.1  60.9</span>
-<span class="co">#&gt;  7 2018-09-01 GGAL.BA &lt;tib~ alpha 0.000100 ETS(A,N,N) 0.126  -24.6  55.2  63.1</span>
-<span class="co">#&gt;  8 2018-09-01 GGAL.BA &lt;tib~ l     0.0366   ETS(A,N,N) 0.126  -24.6  55.2  63.1</span>
-<span class="co">#&gt;  9 2018-10-01 GGAL.BA &lt;tib~ alpha 0.000100 ETS(A,N,N) 0.127  -25.7  57.5  65.4</span>
-<span class="co">#&gt; 10 2018-10-01 GGAL.BA &lt;tib~ l     0.0382   ETS(A,N,N) 0.127  -25.7  57.5  65.4</span>
-<span class="co">#&gt; # ... with 486 more rows, and 7 more variables: ME &lt;dbl&gt;, RMSE &lt;dbl&gt;,</span>
+<span class="co">#&gt; # A tibble: 656 x 17</span>
+<span class="co">#&gt;    date       tickers data    term  estimate model.desc sigma logLik   AIC   BIC</span>
+<span class="co">#&gt;    &lt;date&gt;     &lt;fct&gt;   &lt;list&gt;  &lt;fct&gt;    &lt;dbl&gt; &lt;fct&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 2018-06-01 COME.BA &lt;tibbl~ alpha 0.000100 ETS(A,N,N) 0.136  -29.7  65.4  73.2</span>
+<span class="co">#&gt;  2 2018-06-01 COME.BA &lt;tibbl~ l     0.0256   ETS(A,N,N) 0.136  -29.7  65.4  73.2</span>
+<span class="co">#&gt;  3 2018-07-01 COME.BA &lt;tibbl~ alpha 0.000100 ETS(A,N,N) 0.137  -31.3  68.6  76.4</span>
+<span class="co">#&gt;  4 2018-07-01 COME.BA &lt;tibbl~ l     0.0234   ETS(A,N,N) 0.137  -31.3  68.6  76.4</span>
+<span class="co">#&gt;  5 2018-08-01 COME.BA &lt;tibbl~ alpha 0.000100 ETS(A,N,N) 0.138  -32.8  71.7  79.6</span>
+<span class="co">#&gt;  6 2018-08-01 COME.BA &lt;tibbl~ l     0.0255   ETS(A,N,N) 0.138  -32.8  71.7  79.6</span>
+<span class="co">#&gt;  7 2018-09-01 COME.BA &lt;tibbl~ alpha 0.000100 ETS(A,N,N) 0.137  -33.2  72.3  80.3</span>
+<span class="co">#&gt;  8 2018-09-01 COME.BA &lt;tibbl~ l     0.0256   ETS(A,N,N) 0.137  -33.2  72.3  80.3</span>
+<span class="co">#&gt;  9 2018-10-01 COME.BA &lt;tibbl~ alpha 0.000100 ETS(A,N,N) 0.137  -33.5  73.1  81.0</span>
+<span class="co">#&gt; 10 2018-10-01 COME.BA &lt;tibbl~ l     0.0260   ETS(A,N,N) 0.137  -33.5  73.1  81.0</span>
+<span class="co">#&gt; # ... with 646 more rows, and 7 more variables: ME &lt;dbl&gt;, RMSE &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   MAE &lt;dbl&gt;, MPE &lt;dbl&gt;, MAPE &lt;dbl&gt;, MASE &lt;dbl&gt;, ACF1 &lt;dbl&gt;</span></code></pre></div>
 <p>In this case, the the <a href="http://pkg.robjhyndman.com/forecast/reference/ets.html">ETS</a> function was used to fit the first 100 observations on a expanding window, <code>.cumulative = TRUE</code>. The output contains the fitted parameters, selection criterias, as some traditional in-sample error metrics.</p>
 <p>To extract the true out-of-sample forecasts use <code><a href="reference/get_forecasts.html">get_forecasts()</a></code>. This function automatically identifies the <code>.assess</code> argument in <code><a href="reference/get_models.html">get_models()</a></code> and uses it as a target for the forecast horizon.</p>
@@ -152,20 +152,20 @@
 
 <span class="va">merval_models</span>  <span class="op">%&gt;%</span> 
   <span class="fu"><a href="reference/get_forecasts.html">get_forecasts</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 248 x 8</span>
-<span class="co">#&gt;    date       tickers ret_adj point_forecast  lo.80  lo.95 hi.80 hi.95</span>
-<span class="co">#&gt;    &lt;date&gt;     &lt;fct&gt;     &lt;dbl&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 2018-06-01 GGAL.BA -0.0998         0.0397 -0.122 -0.208 0.202 0.287</span>
-<span class="co">#&gt;  2 2018-07-01 GGAL.BA  0.0244         0.0383 -0.124 -0.210 0.200 0.286</span>
-<span class="co">#&gt;  3 2018-08-01 GGAL.BA -0.123          0.0381 -0.123 -0.209 0.200 0.285</span>
-<span class="co">#&gt;  4 2018-09-01 GGAL.BA  0.205          0.0366 -0.125 -0.211 0.198 0.284</span>
-<span class="co">#&gt;  5 2018-10-01 GGAL.BA -0.238          0.0382 -0.124 -0.210 0.201 0.287</span>
-<span class="co">#&gt;  6 2018-11-01 GGAL.BA  0.202          0.0356 -0.130 -0.217 0.201 0.289</span>
-<span class="co">#&gt;  7 2018-12-01 GGAL.BA  0.0136         0.0372 -0.129 -0.217 0.203 0.291</span>
-<span class="co">#&gt;  8 2019-01-01 GGAL.BA  0.270          0.0369 -0.128 -0.216 0.202 0.290</span>
-<span class="co">#&gt;  9 2019-02-01 GGAL.BA -0.114          0.0391 -0.128 -0.216 0.206 0.294</span>
-<span class="co">#&gt; 10 2019-03-01 GGAL.BA -0.0873         0.0377 -0.130 -0.218 0.205 0.293</span>
-<span class="co">#&gt; # ... with 238 more rows</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 328 x 8</span>
+<span class="co">#&gt;    date       tickers  ret_adj point_forecast  lo.80  lo.95 hi.80 hi.95</span>
+<span class="co">#&gt;    &lt;date&gt;     &lt;fct&gt;      &lt;dbl&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 2018-06-01 COME.BA -0.195           0.0256 -0.149 -0.241 0.200 0.292</span>
+<span class="co">#&gt;  2 2018-07-01 COME.BA  0.238           0.0234 -0.152 -0.245 0.199 0.292</span>
+<span class="co">#&gt;  3 2018-08-01 COME.BA  0.0387          0.0255 -0.151 -0.245 0.202 0.296</span>
+<span class="co">#&gt;  4 2018-09-01 COME.BA  0.0620          0.0256 -0.150 -0.243 0.202 0.295</span>
+<span class="co">#&gt;  5 2018-10-01 COME.BA -0.232           0.0260 -0.149 -0.242 0.201 0.294</span>
+<span class="co">#&gt;  6 2018-11-01 COME.BA -0.0285          0.0235 -0.154 -0.248 0.201 0.295</span>
+<span class="co">#&gt;  7 2018-12-01 COME.BA -0.0353          0.0230 -0.154 -0.247 0.200 0.293</span>
+<span class="co">#&gt;  8 2019-01-01 COME.BA  0.0382          0.0225 -0.153 -0.246 0.198 0.291</span>
+<span class="co">#&gt;  9 2019-02-01 COME.BA -0.0533          0.0226 -0.152 -0.245 0.198 0.290</span>
+<span class="co">#&gt; 10 2019-03-01 COME.BA  0.00908         0.0219 -0.153 -0.245 0.196 0.289</span>
+<span class="co">#&gt; # ... with 318 more rows</span></code></pre></div>
 <p>Currently, <code>YahooTickers</code> supports the following stock indexes:</p>
 <ul>
 <li>
