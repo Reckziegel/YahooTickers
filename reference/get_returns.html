@@ -166,20 +166,23 @@ be a column with stock tickers or stocks names.</p></td>
   <span class='fu'><a href='get_stocks.html'>get_stocks</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>get_returns</span><span class='op'>(</span><span class='va'>.</span>, .group <span class='op'>=</span> <span class='va'>tickers</span>, .type <span class='op'>=</span> <span class='va'>arithmetic</span>,
               .omit_na <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>adjusted</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 8,286 x 3</span><span>
-#&gt;    date       tickers adjusted
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;date&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span> 2010-01-05 HD       0.007</span><span style='text-decoration: underline;'>32</span><span>
-#&gt; </span><span style='color: #555555;'> 2</span><span> 2010-01-06 HD      -</span><span style='color: #BB0000;'>0.003</span><span style='color: #BB0000;text-decoration: underline;'>46</span><span>
-#&gt; </span><span style='color: #555555;'> 3</span><span> 2010-01-07 HD       0.011</span><span style='text-decoration: underline;'>8</span><span> 
-#&gt; </span><span style='color: #555555;'> 4</span><span> 2010-01-08 HD      -</span><span style='color: #BB0000;'>0.004</span><span style='color: #BB0000;text-decoration: underline;'>81</span><span>
-#&gt; </span><span style='color: #555555;'> 5</span><span> 2010-01-11 HD      -</span><span style='color: #BB0000;'>0.028</span><span style='color: #BB0000;text-decoration: underline;'>3</span><span> 
-#&gt; </span><span style='color: #555555;'> 6</span><span> 2010-01-12 HD      -</span><span style='color: #BB0000;'>0.006</span><span style='color: #BB0000;text-decoration: underline;'>39</span><span>
-#&gt; </span><span style='color: #555555;'> 7</span><span> 2010-01-13 HD       0.005</span><span style='text-decoration: underline;'>36</span><span>
-#&gt; </span><span style='color: #555555;'> 8</span><span> 2010-01-14 HD       0.006</span><span style='text-decoration: underline;'>04</span><span>
-#&gt; </span><span style='color: #555555;'> 9</span><span> 2010-01-15 HD       0.009</span><span style='text-decoration: underline;'>54</span><span>
-#&gt; </span><span style='color: #555555;'>10</span><span> 2010-01-19 HD       0.010</span><span style='text-decoration: underline;'>9</span><span> 
-#&gt; </span><span style='color: #555555;'># … with 8,276 more rows</span><span></div></span></pre>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: `type_convert()` only converts columns of type 'character'.</span>
+#&gt; <span class='warning'>- `df` has no columns of type 'character'</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `type_convert()` only converts columns of type 'character'.</span>
+#&gt; <span class='warning'>- `df` has no columns of type 'character'</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `type_convert()` only converts columns of type 'character'.</span>
+#&gt; <span class='warning'>- `df` has no columns of type 'character'</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8,922 × 3</span>
+#&gt;    date       tickers  adjusted
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> 2010-01-05 MMM     -<span style='color: #BB0000;'>0.006</span><span style='color: #BB0000; text-decoration: underline;'>26</span> 
+#&gt; <span style='color: #BCBCBC;'> 2</span> 2010-01-06 MMM      0.014<span style='text-decoration: underline;'>2</span>  
+#&gt; <span style='color: #BCBCBC;'> 3</span> 2010-01-07 MMM      0.000<span style='text-decoration: underline;'>717</span>
+#&gt; <span style='color: #BCBCBC;'> 4</span> 2010-01-08 MMM      0.007<span style='text-decoration: underline;'>05</span> 
+#&gt; <span style='color: #BCBCBC;'> 5</span> 2010-01-11 MMM     -<span style='color: #BB0000;'>0.004</span><span style='color: #BB0000; text-decoration: underline;'>03</span> 
+#&gt; <span style='color: #BCBCBC;'> 6</span> 2010-01-12 MMM      0.000<span style='text-decoration: underline;'>834</span>
+#&gt; <span style='color: #BCBCBC;'> 7</span> 2010-01-13 MMM     -<span style='color: #BB0000;'>0.003</span><span style='color: #BB0000; text-decoration: underline;'>21</span> 
+#&gt; <span style='color: #BCBCBC;'> 8</span> 2010-01-14 MMM     -<span style='color: #BB0000;'>0.003</span><span style='color: #BB0000; text-decoration: underline;'>34</span> 
+#&gt; <span style='color: #BCBCBC;'> 9</span> 2010-01-15 MMM     -<span style='color: #BB0000;'>0.001</span><span style='color: #BB0000; text-decoration: underline;'>56</span> 
+#&gt; <span style='color: #BCBCBC;'>10</span> 2010-01-19 MMM      0.021<span style='text-decoration: underline;'>0</span>  
+#&gt; <span style='color: #949494;'># … with 8,912 more rows</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
