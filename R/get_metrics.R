@@ -26,11 +26,17 @@
 #'   get_metrics(., tickers, adjusted, point_forecast)
 get_metrics <- function(.tbl, .group, .truth, .forecast) {
 
+  if (!inherits(.tbl, "YahooTickers")) {
+    rlang::abort("`.tbl` must be and object from the `YahooTickers`class.")
+  }
+
   # tidy eval
   .group_expr    <- dplyr::enquo(.group)
   .truth_expr    <- dplyr::enquo(.truth)
   .forecast_expr <- dplyr::enquo(.forecast)
   #.aggregate_arg <- lazyeval::expr_text(.aggregate_by)
+
+  # TODO compute error metrics for different aggregation windows.
 
   # if (!is.null(.aggregate_by)) {
   #
@@ -53,6 +59,7 @@ get_metrics <- function(.tbl, .group, .truth, .forecast) {
   # calculate error metrics
   .tbl %>%
     dplyr::select(1:4) %>%
+    dplyr::group_by(!!.group_expr) |>
     dplyr::mutate(error = (!!.truth_expr) - (!!.forecast_expr)) %>%
     dplyr::summarise(
 
