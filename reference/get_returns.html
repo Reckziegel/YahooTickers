@@ -159,30 +159,28 @@ be a column with stock tickers or stocks names.</p></td>
     <p>A tidy <code>tibble</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/Reckziegel/YahooTickers'>YahooTickers</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='fu'><a href='get_tickers.html'>get_tickers</a></span><span class='op'>(</span><span class='va'>dow</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='get_stocks.html'>get_stocks</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>get_returns</span><span class='op'>(</span><span class='va'>.</span>, .group <span class='op'>=</span> <span class='va'>tickers</span>, .type <span class='op'>=</span> <span class='va'>arithmetic</span>,
-              .omit_na <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>adjusted</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: `type_convert()` only converts columns of type 'character'.</span>
-#&gt; <span class='warning'>- `df` has no columns of type 'character'</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `type_convert()` only converts columns of type 'character'.</span>
-#&gt; <span class='warning'>- `df` has no columns of type 'character'</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `type_convert()` only converts columns of type 'character'.</span>
-#&gt; <span class='warning'>- `df` has no columns of type 'character'</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8,922 × 3</span>
-#&gt;    date       tickers  adjusted
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> 2010-01-05 MMM     -<span style='color: #BB0000;'>0.006</span><span style='color: #BB0000; text-decoration: underline;'>26</span> 
-#&gt; <span style='color: #BCBCBC;'> 2</span> 2010-01-06 MMM      0.014<span style='text-decoration: underline;'>2</span>  
-#&gt; <span style='color: #BCBCBC;'> 3</span> 2010-01-07 MMM      0.000<span style='text-decoration: underline;'>717</span>
-#&gt; <span style='color: #BCBCBC;'> 4</span> 2010-01-08 MMM      0.007<span style='text-decoration: underline;'>05</span> 
-#&gt; <span style='color: #BCBCBC;'> 5</span> 2010-01-11 MMM     -<span style='color: #BB0000;'>0.004</span><span style='color: #BB0000; text-decoration: underline;'>03</span> 
-#&gt; <span style='color: #BCBCBC;'> 6</span> 2010-01-12 MMM      0.000<span style='text-decoration: underline;'>834</span>
-#&gt; <span style='color: #BCBCBC;'> 7</span> 2010-01-13 MMM     -<span style='color: #BB0000;'>0.003</span><span style='color: #BB0000; text-decoration: underline;'>21</span> 
-#&gt; <span style='color: #BCBCBC;'> 8</span> 2010-01-14 MMM     -<span style='color: #BB0000;'>0.003</span><span style='color: #BB0000; text-decoration: underline;'>34</span> 
-#&gt; <span style='color: #BCBCBC;'> 9</span> 2010-01-15 MMM     -<span style='color: #BB0000;'>0.001</span><span style='color: #BB0000; text-decoration: underline;'>56</span> 
-#&gt; <span style='color: #BCBCBC;'>10</span> 2010-01-19 MMM      0.021<span style='text-decoration: underline;'>0</span>  
-#&gt; <span style='color: #949494;'># … with 8,912 more rows</span></div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/Reckziegel/YahooTickers'>YahooTickers</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='get_tickers.html'>get_tickers</a></span><span class='op'>(</span><span class='va'>dow</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='get_stocks.html'>get_stocks</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'>get_returns</span><span class='op'>(</span><span class='va'>.</span>, .group <span class='op'>=</span> <span class='va'>tickers</span>, .type <span class='op'>=</span> <span class='va'>arithmetic</span>,</span>
+<span class='r-in'>              .omit_na <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>adjusted</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 8,985 × 3</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    date       tickers  adjusted</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 1</span> 2010-01-05 MMM     -<span style='color: #BB0000;'>0.006</span><span style='color: #BB0000; text-decoration: underline;'>26</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 2</span> 2010-01-06 MMM      0.014<span style='text-decoration: underline;'>2</span>  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 3</span> 2010-01-07 MMM      0.000<span style='text-decoration: underline;'>717</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 4</span> 2010-01-08 MMM      0.007<span style='text-decoration: underline;'>05</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 5</span> 2010-01-11 MMM     -<span style='color: #BB0000;'>0.004</span><span style='color: #BB0000; text-decoration: underline;'>03</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 6</span> 2010-01-12 MMM      0.000<span style='text-decoration: underline;'>834</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 7</span> 2010-01-13 MMM     -<span style='color: #BB0000;'>0.003</span><span style='color: #BB0000; text-decoration: underline;'>21</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 8</span> 2010-01-14 MMM     -<span style='color: #BB0000;'>0.003</span><span style='color: #BB0000; text-decoration: underline;'>34</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 9</span> 2010-01-15 MMM     -<span style='color: #BB0000;'>0.001</span><span style='color: #BB0000; text-decoration: underline;'>56</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>10</span> 2010-01-19 MMM      0.021<span style='text-decoration: underline;'>0</span>  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># … with 8,975 more rows</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
